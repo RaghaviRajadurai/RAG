@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  cancer
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Meera Nair: Breast Cancer (Early Stage) (relevance: 39.5%)
+  • Kavitha Devi: Breast Fibroadenoma (relevance: 14.9%)
+  • Karthik Raj: Acute Bronchitis (relevance: 11.4%)
+  • Deepa Joshi: Osteoarthritis (relevance: 11.2%)
+  • Pooja Kulkarni: Urinary Tract Infection (Recurrent) (relevance: 11.2%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Meera Nair, Age: 44, Gender: Female. Hospital: Narayana Health, Bangalore, Doctor: Dr. Anil Kumar, Report Date: 2026-04-03. Diagnosis: Breast Cancer (Early Stage) - Small lump detected in breast during routine screening. Biopsy confirms malignant cells but limited to localized area without metastasis.. Prescription: Surgical removal, Radiation therapy, Oncology follow-up. Lab Report: biopsy: Malignant cells detected; mammogram: Suspicious lesion. Remarks: Early-stage cancer; good prognosis.
+
+2. Patient: Kavitha Devi, Age: 51, Gender: Female. Hospital: Global Hospital, Chennai, Doctor: Dr. S. Balaji, Report Date: 2026-03-23. Diagnosis: Breast Fibroadenoma - Patient noticed a painless lump in the breast. Ultrasound suggests a benign tumor. No signs of malignancy observed.. Prescription: Regular monitoring, Surgical removal if necessary. Lab Report: ultrasound: Benign lump; biopsy: Non-cancerous. Remarks: Fibroadenoma confirmed; low risk.
+
+3. Patient: Karthik Raj, Age: 36, Gender: Male. Hospital: MIOT Hospital, Chennai, Doctor: Dr. Suresh Babu, Report Date: 2026-02-18. Diagnosis: Acute Bronchitis - Persistent cough and chest congestion. Chest X-ray shows mild inflammation.. Prescription: Antibiotics for 5 days, Cough syrup, Steam inhalation. Lab Report: wbc_count: 11500 cells/mcL; oxygen_level: 96%; xray: Mild inflammation. Remarks: Infection present in respiratory tract.
+
+4. Patient: Deepa Joshi, Age: 53, Gender: Female. Hospital: Sterling Hospital, Ahmedabad, Doctor: Dr. Rakesh Joshi, Report Date: 2026-04-05. Diagnosis: Osteoarthritis - Degenerative joint disease causing knee pain, stiffness, and reduced mobility. Symptoms worsen with activity and improve with rest.. Prescription: Pain relievers, Physiotherapy, Weight management. Lab Report: xray_knee: Joint space narrowing. Remarks: Degenerative arthritis.
+
+5. Patient: Pooja Kulkarni, Age: 27, Gender: Female. Hospital: Ruby Hospital, Pune, Doctor: Dr. Sneha Patil, Report Date: 2026-03-29. Diagnosis: Urinary Tract Infection (Recurrent) - Frequent episodes of burning urination and urgency. Previous history of UTIs suggests recurrent infection likely due to incomplete treatment or hygiene factors.. Prescription: Nitrofurantoin course, Increase fluid intake, Hygiene counseling. Lab Report: urine_culture: E. coli present; wbc: High. Remarks: Recurrent bacterial infection.
+
+--- QUESTION ---
+cancer
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-01 12:51:02
+==================================================

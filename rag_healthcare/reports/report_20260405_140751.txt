@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  "What are the lab results for anemia patients?"
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Sneha Reddy: Iron Deficiency Anemia (relevance: 48.8%)
+  • Megha Shah: Iron Deficiency Anemia (Severe) (relevance: 48.4%)
+  • Arun Kumar: Viral Fever (relevance: 29.2%)
+  • Rohini Krishnan: Rheumatoid Arthritis (relevance: 25.7%)
+  • Rahul Bose: Peptic Ulcer Disease (relevance: 21.4%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Sneha Reddy, Age: 28, Gender: Female. Hospital: Care Hospital, Hyderabad, Doctor: Dr. Lakshmi Devi, Report Date: 2026-02-10. Diagnosis: Iron Deficiency Anemia - Low hemoglobin and ferritin levels suggest iron deficiency, likely due to poor dietary intake.. Prescription: Iron tablets, Vitamin C supplements, Iron-rich diet. Lab Report: hemoglobin: 9.2 g/dL; ferritin: 10 ng/mL; rbc_count: Low. Remarks: Significant anemia detected.
+
+2. Patient: Megha Shah, Age: 29, Gender: Female. Hospital: Sterling Hospital, Ahmedabad, Doctor: Dr. Hiral Shah, Report Date: 2026-03-25. Diagnosis: Iron Deficiency Anemia (Severe) - Patient presents with extreme fatigue, dizziness, and pallor. Hemoglobin significantly reduced. Likely due to chronic blood loss or inadequate dietary intake.. Prescription: Iron injections, Oral iron supplements, Diet modification. Lab Report: hemoglobin: 7.5 g/dL; ferritin: 5 ng/mL; rbc_count: Low. Remarks: Severe anemia requiring immediate treatment.
+
+3. Patient: Arun Kumar, Age: 32, Gender: Male. Hospital: Apollo Hospital, Chennai, Doctor: Dr. Ramesh Kumar, Report Date: 2026-02-12. Diagnosis: Viral Fever - Patient presents with elevated body temperature (101Â°F), fatigue, and mild throat irritation. No bacterial infection detected. Likely viral etiology.. Prescription: Paracetamol 500mg - twice daily, ORS solution for hydration, Rest for 3 days. Lab Report: hemoglobin: 13.5 g/dL; wbc_count: 9000 cells/mcL; platelets: 2.5 lakh/mcL. Remarks: All values within normal range, supports viral infection diagnosis.
+
+4. Patient: Rohini Krishnan, Age: 35, Gender: Female. Hospital: Apollo Hospital, Madurai, Doctor: Dr. S. Kumaravel, Report Date: 2026-03-27. Diagnosis: Rheumatoid Arthritis - Patient reports chronic joint pain, swelling, and morning stiffness lasting more than 1 hour. Symptoms are symmetrical, affecting both hands and wrists. Autoimmune etiology suspected due to elevated inflammatory markers.. Prescription: Methotrexate weekly, NSAIDs for pain relief, Physiotherapy, Regular monitoring of liver function. Lab Report: ra_factor: Positive; esr: 45 mm/hr; crp: Elevated. Remarks: Active inflammatory arthritis.
+
+5. Patient: Rahul Bose, Age: 42, Gender: Male. Hospital: Ruby Hospital, Kolkata, Doctor: Dr. Anirban Chatterjee, Report Date: 2026-03-22. Diagnosis: Peptic Ulcer Disease - Patient complains of burning epigastric pain, especially on an empty stomach. Endoscopy reveals ulcer in the gastric lining. Likely associated with H. pylori infection and NSAID use.. Prescription: Proton pump inhibitors, Antibiotics for H. pylori, Avoid NSAIDs. Lab Report: endoscopy: Gastric ulcer present; h_pylori_test: Positive. Remarks: Confirmed peptic ulcer disease.
+
+--- QUESTION ---
+"What are the lab results for anemia patients?"
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-05 14:07:51
+==================================================

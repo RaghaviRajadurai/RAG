@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  diabets
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Divakar Reddy: Type 2 Diabetes with Neuropathy (relevance: 20.3%)
+  • Priya Sharma: Type 2 Diabetes (relevance: 18.5%)
+  • Ramesh Gupta: Chronic Kidney Disease (relevance: 13.5%)
+  • Nitin Sharma: Hyperlipidemia (relevance: 11.4%)
+  • Kiran Das: Acute Pancreatitis (relevance: 10.2%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Divakar Reddy, Age: 45, Gender: Male. Hospital: Care Hospital, Hyderabad, Doctor: Dr. Mahesh Reddy, Report Date: 2026-03-20. Diagnosis: Type 2 Diabetes with Neuropathy - Patient has poorly controlled diabetes with complaints of tingling and numbness in feet. HbA1c significantly elevated indicating chronic hyperglycemia leading to nerve damage.. Prescription: Metformin 1000mg twice daily, Insulin therapy, Vitamin B12 supplements, Foot care and regular monitoring. Lab Report: hba1c: 9.1%; fasting_glucose: 180 mg/dL; neuropathy_test: Positive. Remarks: Diabetic neuropathy confirmed; strict glycemic control required.
+
+2. Patient: Priya Sharma, Age: 45, Gender: Female. Hospital: Fortis Hospital, Bangalore, Doctor: Dr. Neha Gupta, Report Date: 2026-01-28. Diagnosis: Type 2 Diabetes - Elevated fasting glucose and HbA1c levels indicate poor glycemic control over last 3 months.. Prescription: Metformin 500mg - twice daily, Diet control (low sugar), Regular exercise. Lab Report: fasting_glucose: 145 mg/dL; hba1c: 7.2%; cholesterol: 210 mg/dL. Remarks: Above normal glucose levels, requires monitoring.
+
+3. Patient: Ramesh Gupta, Age: 60, Gender: Male. Hospital: AIIMS Delhi, Doctor: Dr. Sanjay Mehta, Report Date: 2026-03-01. Diagnosis: Chronic Kidney Disease - Gradual loss of kidney function over time, elevated creatinine levels.. Prescription: ACE inhibitors, Low protein diet, Regular dialysis monitoring. Lab Report: creatinine: 2.5 mg/dL; gfr: 45 mL/min. Remarks: Moderate kidney impairment.
+
+4. Patient: Nitin Sharma, Age: 46, Gender: Male. Hospital: Max Hospital, Delhi, Doctor: Dr. Alok Verma, Report Date: 2026-03-09. Diagnosis: Hyperlipidemia - Elevated cholesterol levels increasing risk of heart disease.. Prescription: Statins, Diet control, Exercise. Lab Report: cholesterol: 260 mg/dL; ldl: 180 mg/dL. Remarks: High lipid levels.
+
+5. Patient: Kiran Das, Age: 40, Gender: Male. Hospital: Global Hospital, Chennai, Doctor: Dr. R. Venkatesh, Report Date: 2026-04-02. Diagnosis: Acute Pancreatitis - Severe abdominal pain radiating to the back, associated with nausea and vomiting. Likely triggered by gallstones or alcohol consumption.. Prescription: IV fluids, Pain management, Fasting and gradual diet reintroduction. Lab Report: amylase: High; lipase: Elevated; ultrasound: Pancreatic inflammation. Remarks: Acute inflammatory condition.
+
+--- QUESTION ---
+diabets
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-01 12:50:49
+==================================================

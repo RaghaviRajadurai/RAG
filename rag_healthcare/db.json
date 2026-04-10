@@ -1,0 +1,1251 @@
+﻿{
+    "patients":  [
+                     {
+                         "patient_id":  "P001",
+                         "name":  "Arun Kumar",
+                         "email":  "arun.kumar001@gmail.com",
+                         "age":  32,
+                         "gender":  "Male",
+                         "hospital":  "Apollo Hospital, Chennai",
+                         "doctor":  "Dr. Ramesh Kumar",
+                         "report_date":  "2026-02-12",
+                         "diagnosis":  {
+                                           "condition":  "Viral Fever",
+                                           "description":  "Patient presents with elevated body temperature (101Â°F), fatigue, and mild throat irritation. No bacterial infection detected. Likely viral etiology."
+                                       },
+                         "prescription":  [
+                                              "Paracetamol 500mg - twice daily",
+                                              "ORS solution for hydration",
+                                              "Rest for 3 days"
+                                          ],
+                         "lab_report":  {
+                                            "hemoglobin":  "13.5 g/dL",
+                                            "wbc_count":  "9000 cells/mcL",
+                                            "platelets":  "2.5 lakh/mcL",
+                                            "remarks":  "All values within normal range, supports viral infection diagnosis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P002",
+                         "name":  "Priya Sharma",
+                         "email":  "priya.sharma002@gmail.com",
+                         "age":  45,
+                         "gender":  "Female",
+                         "hospital":  "Fortis Hospital, Bangalore",
+                         "doctor":  "Dr. Neha Gupta",
+                         "report_date":  "2026-01-28",
+                         "diagnosis":  {
+                                           "condition":  "Type 2 Diabetes",
+                                           "description":  "Elevated fasting glucose and HbA1c levels indicate poor glycemic control over last 3 months."
+                                       },
+                         "prescription":  [
+                                              "Metformin 500mg - twice daily",
+                                              "Diet control (low sugar)",
+                                              "Regular exercise"
+                                          ],
+                         "lab_report":  {
+                                            "fasting_glucose":  "145 mg/dL",
+                                            "hba1c":  "7.2%",
+                                            "cholesterol":  "210 mg/dL",
+                                            "remarks":  "Above normal glucose levels, requires monitoring"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P003",
+                         "name":  "Rahul Verma",
+                         "email":  "rahul.verma003@gmail.com",
+                         "age":  50,
+                         "gender":  "Male",
+                         "hospital":  "AIIMS Delhi",
+                         "doctor":  "Dr. Amit Singh",
+                         "report_date":  "2026-02-05",
+                         "diagnosis":  {
+                                           "condition":  "Hypertension",
+                                           "description":  "Consistently high blood pressure readings over multiple visits. Risk of cardiovascular complications."
+                                       },
+                         "prescription":  [
+                                              "Amlodipine 5mg daily",
+                                              "Low salt diet",
+                                              "Daily walking"
+                                          ],
+                         "lab_report":  {
+                                            "blood_pressure":  "150/95 mmHg",
+                                            "cholesterol":  "220 mg/dL",
+                                            "ecg":  "Normal",
+                                            "remarks":  "Elevated BP requires long-term management"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P004",
+                         "name":  "Sneha Reddy",
+                         "email":  "sneha.reddy004@gmail.com",
+                         "age":  28,
+                         "gender":  "Female",
+                         "hospital":  "Care Hospital, Hyderabad",
+                         "doctor":  "Dr. Lakshmi Devi",
+                         "report_date":  "2026-02-10",
+                         "diagnosis":  {
+                                           "condition":  "Iron Deficiency Anemia",
+                                           "description":  "Low hemoglobin and ferritin levels suggest iron deficiency, likely due to poor dietary intake."
+                                       },
+                         "prescription":  [
+                                              "Iron tablets",
+                                              "Vitamin C supplements",
+                                              "Iron-rich diet"
+                                          ],
+                         "lab_report":  {
+                                            "hemoglobin":  "9.2 g/dL",
+                                            "ferritin":  "10 ng/mL",
+                                            "rbc_count":  "Low",
+                                            "remarks":  "Significant anemia detected"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P005",
+                         "name":  "Karthik Raj",
+                         "email":  "karthik.raj005@gmail.com",
+                         "age":  36,
+                         "gender":  "Male",
+                         "hospital":  "MIOT Hospital, Chennai",
+                         "doctor":  "Dr. Suresh Babu",
+                         "report_date":  "2026-02-18",
+                         "diagnosis":  {
+                                           "condition":  "Acute Bronchitis",
+                                           "description":  "Persistent cough and chest congestion. Chest X-ray shows mild inflammation."
+                                       },
+                         "prescription":  [
+                                              "Antibiotics for 5 days",
+                                              "Cough syrup",
+                                              "Steam inhalation"
+                                          ],
+                         "lab_report":  {
+                                            "wbc_count":  "11500 cells/mcL",
+                                            "oxygen_level":  "96%",
+                                            "xray":  "Mild inflammation",
+                                            "remarks":  "Infection present in respiratory tract"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P006",
+                         "name":  "Meena Iyer",
+                         "email":  "meena.iyer006@gmail.com",
+                         "age":  40,
+                         "gender":  "Female",
+                         "hospital":  "Apollo Hospital, Madurai",
+                         "doctor":  "Dr. Kavitha Menon",
+                         "report_date":  "2026-01-30",
+                         "diagnosis":  {
+                                           "condition":  "Hypothyroidism",
+                                           "description":  "Low thyroid hormone levels causing fatigue, weight gain, and slow metabolism."
+                                       },
+                         "prescription":  [
+                                              "Levothyroxine 50mcg daily"
+                                          ],
+                         "lab_report":  {
+                                            "tsh":  "8.5 mIU/L",
+                                            "t3":  "Low",
+                                            "t4":  "Low",
+                                            "remarks":  "Thyroid levels below normal"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P007",
+                         "name":  "Vijay Singh",
+                         "email":  "vijay.singh007@gmail.com",
+                         "age":  38,
+                         "gender":  "Male",
+                         "hospital":  "Max Hospital, Delhi",
+                         "doctor":  "Dr. Rajiv Malhotra",
+                         "report_date":  "2026-02-14",
+                         "diagnosis":  {
+                                           "condition":  "Kidney Stones",
+                                           "description":  "Ultrasound reveals 5mm stone in left kidney causing intermittent pain."
+                                       },
+                         "prescription":  [
+                                              "Painkillers",
+                                              "Drink 3L water daily"
+                                          ],
+                         "lab_report":  {
+                                            "creatinine":  "1.3 mg/dL",
+                                            "ultrasound":  "5mm stone",
+                                            "urine_test":  "High calcium",
+                                            "remarks":  "Stone formation confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P008",
+                         "name":  "Anjali Patel",
+                         "email":  "anjali.patel008@gmail.com",
+                         "age":  30,
+                         "gender":  "Female",
+                         "hospital":  "Sterling Hospital, Ahmedabad",
+                         "doctor":  "Dr. Hitesh Shah",
+                         "report_date":  "2026-02-07",
+                         "diagnosis":  {
+                                           "condition":  "Migraine",
+                                           "description":  "Recurring headaches with sensitivity to light and sound. Neurological exam normal."
+                                       },
+                         "prescription":  [
+                                              "Sumatriptan",
+                                              "Adequate sleep",
+                                              "Avoid triggers"
+                                          ],
+                         "lab_report":  {
+                                            "mri":  "Normal",
+                                            "bp":  "120/80",
+                                            "remarks":  "No structural brain abnormality"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P009",
+                         "name":  "Suresh Babu",
+                         "email":  "suresh.babu009@gmail.com",
+                         "age":  48,
+                         "gender":  "Male",
+                         "hospital":  "Global Hospital, Chennai",
+                         "doctor":  "Dr. Vinod Kumar",
+                         "report_date":  "2026-02-11",
+                         "diagnosis":  {
+                                           "condition":  "Fatty Liver",
+                                           "description":  "Ultrasound indicates fatty deposits in liver. Likely due to diet and lifestyle."
+                                       },
+                         "prescription":  [
+                                              "Lifestyle changes",
+                                              "Avoid alcohol",
+                                              "Exercise"
+                                          ],
+                         "lab_report":  {
+                                            "alt":  "65 U/L",
+                                            "ast":  "58 U/L",
+                                            "ultrasound":  "Fatty liver grade 1",
+                                            "remarks":  "Liver enzymes elevated"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P010",
+                         "name":  "Divya Nair",
+                         "email":  "divya.nair010@gmail.com",
+                         "age":  27,
+                         "gender":  "Female",
+                         "hospital":  "Aster Medcity, Kochi",
+                         "doctor":  "Dr. Anoop Nair",
+                         "report_date":  "2026-02-16",
+                         "diagnosis":  {
+                                           "condition":  "Urinary Tract Infection",
+                                           "description":  "Symptoms include burning urination and frequent urge. Lab confirms bacterial infection."
+                                       },
+                         "prescription":  [
+                                              "Nitrofurantoin",
+                                              "Increase fluid intake"
+                                          ],
+                         "lab_report":  {
+                                            "urine_test":  "Bacteria present",
+                                            "wbc":  "High",
+                                            "culture":  "E. coli detected",
+                                            "remarks":  "Confirmed UTI"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P011",
+                         "name":  "Rohit Das",
+                         "email":  "rohit.das011@gmail.com",
+                         "age":  34,
+                         "gender":  "Male",
+                         "hospital":  "Ruby Hospital, Kolkata",
+                         "doctor":  "Dr. Subhash Roy",
+                         "report_date":  "2026-02-20",
+                         "diagnosis":  {
+                                           "condition":  "Gastritis",
+                                           "description":  "Inflammation of stomach lining due to irregular eating habits."
+                                       },
+                         "prescription":  [
+                                              "Antacids",
+                                              "Avoid spicy food"
+                                          ],
+                         "lab_report":  {
+                                            "endoscopy":  "Mild inflammation",
+                                            "remarks":  "Non-severe gastritis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P012",
+                         "name":  "Lakshmi Devi",
+                         "email":  "lakshmi.devi012@gmail.com",
+                         "age":  55,
+                         "gender":  "Female",
+                         "hospital":  "Narayana Health, Bangalore",
+                         "doctor":  "Dr. Prakash Shetty",
+                         "report_date":  "2026-02-22",
+                         "diagnosis":  {
+                                           "condition":  "Osteoporosis",
+                                           "description":  "Low bone density increasing fracture risk."
+                                       },
+                         "prescription":  [
+                                              "Calcium supplements",
+                                              "Vitamin D",
+                                              "Weight-bearing exercise"
+                                          ],
+                         "lab_report":  {
+                                            "bone_density":  "Low",
+                                            "vitamin_d":  "Deficient",
+                                            "remarks":  "High fracture risk"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P013",
+                         "name":  "Manoj Kumar",
+                         "email":  "manoj.kumar013@gmail.com",
+                         "age":  41,
+                         "gender":  "Male",
+                         "hospital":  "Apollo Hospital, Bangalore",
+                         "doctor":  "Dr. Vivek Sharma",
+                         "report_date":  "2026-02-25",
+                         "diagnosis":  {
+                                           "condition":  "Asthma",
+                                           "description":  "Patient experiences shortness of breath and wheezing, especially at night. Triggered by dust exposure."
+                                       },
+                         "prescription":  [
+                                              "Inhaler (Salbutamol)",
+                                              "Avoid allergens",
+                                              "Regular monitoring"
+                                          ],
+                         "lab_report":  {
+                                            "spirometry":  "Reduced airflow",
+                                            "oxygen_level":  "95%",
+                                            "remarks":  "Mild persistent asthma"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P014",
+                         "name":  "Neha Verma",
+                         "email":  "neha.verma014@gmail.com",
+                         "age":  29,
+                         "gender":  "Female",
+                         "hospital":  "Fortis Hospital, Delhi",
+                         "doctor":  "Dr. Pooja Arora",
+                         "report_date":  "2026-02-26",
+                         "diagnosis":  {
+                                           "condition":  "PCOS",
+                                           "description":  "Irregular menstrual cycles and hormonal imbalance indicating Polycystic Ovary Syndrome."
+                                       },
+                         "prescription":  [
+                                              "Hormonal tablets",
+                                              "Weight management",
+                                              "Regular exercise"
+                                          ],
+                         "lab_report":  {
+                                            "ultrasound":  "Multiple cysts",
+                                            "hormone_levels":  "Imbalanced",
+                                            "remarks":  "PCOS confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P015",
+                         "name":  "Ajay Patel",
+                         "email":  "ajay.patel015@gmail.com",
+                         "age":  52,
+                         "gender":  "Male",
+                         "hospital":  "Sterling Hospital, Ahmedabad",
+                         "doctor":  "Dr. Mehul Shah",
+                         "report_date":  "2026-02-27",
+                         "diagnosis":  {
+                                           "condition":  "Coronary Artery Disease",
+                                           "description":  "Chest pain and reduced blood flow to heart detected through angiography."
+                                       },
+                         "prescription":  [
+                                              "Aspirin",
+                                              "Statins",
+                                              "Lifestyle changes"
+                                          ],
+                         "lab_report":  {
+                                            "angiography":  "Partial blockage",
+                                            "cholesterol":  "240 mg/dL",
+                                            "remarks":  "High cardiac risk"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P016",
+                         "name":  "Kavya Nair",
+                         "email":  "kavya.nair016@gmail.com",
+                         "age":  26,
+                         "gender":  "Female",
+                         "hospital":  "Aster Medcity, Kochi",
+                         "doctor":  "Dr. Deepak Menon",
+                         "report_date":  "2026-02-28",
+                         "diagnosis":  {
+                                           "condition":  "Allergic Rhinitis",
+                                           "description":  "Sneezing, runny nose, and nasal congestion due to pollen allergy."
+                                       },
+                         "prescription":  [
+                                              "Antihistamines",
+                                              "Nasal spray",
+                                              "Avoid allergens"
+                                          ],
+                         "lab_report":  {
+                                            "allergy_test":  "Positive for pollen",
+                                            "remarks":  "Seasonal allergy"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P017",
+                         "name":  "Ramesh Gupta",
+                         "email":  "ramesh.gupta017@gmail.com",
+                         "age":  60,
+                         "gender":  "Male",
+                         "hospital":  "AIIMS Delhi",
+                         "doctor":  "Dr. Sanjay Mehta",
+                         "report_date":  "2026-03-01",
+                         "diagnosis":  {
+                                           "condition":  "Chronic Kidney Disease",
+                                           "description":  "Gradual loss of kidney function over time, elevated creatinine levels."
+                                       },
+                         "prescription":  [
+                                              "ACE inhibitors",
+                                              "Low protein diet",
+                                              "Regular dialysis monitoring"
+                                          ],
+                         "lab_report":  {
+                                            "creatinine":  "2.5 mg/dL",
+                                            "gfr":  "45 mL/min",
+                                            "remarks":  "Moderate kidney impairment"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P018",
+                         "name":  "Pooja Iyer",
+                         "email":  "pooja.iyer018@gmail.com",
+                         "age":  33,
+                         "gender":  "Female",
+                         "hospital":  "MIOT Hospital, Chennai",
+                         "doctor":  "Dr. Anitha Krishnan",
+                         "report_date":  "2026-03-02",
+                         "diagnosis":  {
+                                           "condition":  "Vitamin D Deficiency",
+                                           "description":  "Low vitamin D levels causing fatigue and bone pain."
+                                       },
+                         "prescription":  [
+                                              "Vitamin D supplements",
+                                              "Sunlight exposure"
+                                          ],
+                         "lab_report":  {
+                                            "vitamin_d":  "12 ng/mL",
+                                            "calcium":  "Low",
+                                            "remarks":  "Deficiency confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P019",
+                         "name":  "Sanjay Yadav",
+                         "email":  "sanjay.yadav019@gmail.com",
+                         "age":  47,
+                         "gender":  "Male",
+                         "hospital":  "Max Hospital, Gurgaon",
+                         "doctor":  "Dr. Rohit Bansal",
+                         "report_date":  "2026-03-03",
+                         "diagnosis":  {
+                                           "condition":  "Sleep Apnea",
+                                           "description":  "Interrupted breathing during sleep causing daytime fatigue."
+                                       },
+                         "prescription":  [
+                                              "CPAP machine",
+                                              "Weight reduction"
+                                          ],
+                         "lab_report":  {
+                                            "sleep_study":  "Frequent apnea episodes",
+                                            "remarks":  "Moderate sleep apnea"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P020",
+                         "name":  "Anita Sharma",
+                         "email":  "anita.sharma020@gmail.com",
+                         "age":  39,
+                         "gender":  "Female",
+                         "hospital":  "Fortis Hospital, Mumbai",
+                         "doctor":  "Dr. Ritu Kapoor",
+                         "report_date":  "2026-03-04",
+                         "diagnosis":  {
+                                           "condition":  "Depression",
+                                           "description":  "Persistent low mood, lack of interest, and fatigue over several weeks."
+                                       },
+                         "prescription":  [
+                                              "SSRIs",
+                                              "Counseling therapy"
+                                          ],
+                         "lab_report":  {
+                                            "psych_eval":  "Moderate depression",
+                                            "remarks":  "Requires therapy and medication"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P021",
+                         "name":  "Deepak Singh",
+                         "email":  "deepak.singh021@gmail.com",
+                         "age":  44,
+                         "gender":  "Male",
+                         "hospital":  "Narayana Health, Bangalore",
+                         "doctor":  "Dr. Kiran Rao",
+                         "report_date":  "2026-03-05",
+                         "diagnosis":  {
+                                           "condition":  "Gout",
+                                           "description":  "Joint pain and swelling due to uric acid crystal deposition."
+                                       },
+                         "prescription":  [
+                                              "Allopurinol",
+                                              "Low purine diet"
+                                          ],
+                         "lab_report":  {
+                                            "uric_acid":  "8.5 mg/dL",
+                                            "remarks":  "Elevated uric acid"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P022",
+                         "name":  "Shalini Menon",
+                         "email":  "shalini.menon022@gmail.com",
+                         "age":  31,
+                         "gender":  "Female",
+                         "hospital":  "Aster Medcity, Kochi",
+                         "doctor":  "Dr. Joseph Mathew",
+                         "report_date":  "2026-03-06",
+                         "diagnosis":  {
+                                           "condition":  "Dengue Fever",
+                                           "description":  "High fever, joint pain, and low platelet count indicating dengue infection."
+                                       },
+                         "prescription":  [
+                                              "Paracetamol",
+                                              "Fluid intake",
+                                              "Platelet monitoring"
+                                          ],
+                         "lab_report":  {
+                                            "platelets":  "90000/mcL",
+                                            "dengue_test":  "Positive",
+                                            "remarks":  "Confirmed dengue infection"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P023",
+                         "name":  "Harish Kumar",
+                         "email":  "harish.kumar023@gmail.com",
+                         "age":  37,
+                         "gender":  "Male",
+                         "hospital":  "Apollo Hospital, Hyderabad",
+                         "doctor":  "Dr. Srinivas Rao",
+                         "report_date":  "2026-03-07",
+                         "diagnosis":  {
+                                           "condition":  "Pneumonia",
+                                           "description":  "Patient has fever, cough with sputum, and chest pain. Chest X-ray confirms lung infection."
+                                       },
+                         "prescription":  [
+                                              "IV antibiotics",
+                                              "Paracetamol",
+                                              "Rest and hydration"
+                                          ],
+                         "lab_report":  {
+                                            "wbc_count":  "14000 cells/mcL",
+                                            "xray":  "Lung infection visible",
+                                            "oxygen_level":  "92%",
+                                            "remarks":  "Bacterial pneumonia confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P024",
+                         "name":  "Swathi Reddy",
+                         "email":  "swathi.reddy024@gmail.com",
+                         "age":  24,
+                         "gender":  "Female",
+                         "hospital":  "Care Hospital, Hyderabad",
+                         "doctor":  "Dr. Kavya Reddy",
+                         "report_date":  "2026-03-08",
+                         "diagnosis":  {
+                                           "condition":  "Skin Allergy",
+                                           "description":  "Red rashes and itching due to allergic reaction to cosmetics."
+                                       },
+                         "prescription":  [
+                                              "Antihistamines",
+                                              "Topical ointment"
+                                          ],
+                         "lab_report":  {
+                                            "allergy_test":  "Positive",
+                                            "remarks":  "Allergic dermatitis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P025",
+                         "name":  "Nitin Sharma",
+                         "email":  "nitin.sharma025@gmail.com",
+                         "age":  46,
+                         "gender":  "Male",
+                         "hospital":  "Max Hospital, Delhi",
+                         "doctor":  "Dr. Alok Verma",
+                         "report_date":  "2026-03-09",
+                         "diagnosis":  {
+                                           "condition":  "Hyperlipidemia",
+                                           "description":  "Elevated cholesterol levels increasing risk of heart disease."
+                                       },
+                         "prescription":  [
+                                              "Statins",
+                                              "Diet control",
+                                              "Exercise"
+                                          ],
+                         "lab_report":  {
+                                            "cholesterol":  "260 mg/dL",
+                                            "ldl":  "180 mg/dL",
+                                            "remarks":  "High lipid levels"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P026",
+                         "name":  "Geetha Iyer",
+                         "email":  "geetha.iyer026@gmail.com",
+                         "age":  42,
+                         "gender":  "Female",
+                         "hospital":  "MIOT Hospital, Chennai",
+                         "doctor":  "Dr. Radha Krishnan",
+                         "report_date":  "2026-03-10",
+                         "diagnosis":  {
+                                           "condition":  "Arthritis",
+                                           "description":  "Joint pain and stiffness, especially in the morning."
+                                       },
+                         "prescription":  [
+                                              "Pain relievers",
+                                              "Physiotherapy"
+                                          ],
+                         "lab_report":  {
+                                            "ra_factor":  "Positive",
+                                            "xray":  "Joint inflammation",
+                                            "remarks":  "Rheumatoid arthritis suspected"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P027",
+                         "name":  "Kiran Patel",
+                         "email":  "kiran.patel027@gmail.com",
+                         "age":  35,
+                         "gender":  "Male",
+                         "hospital":  "Sterling Hospital, Ahmedabad",
+                         "doctor":  "Dr. Hiren Patel",
+                         "report_date":  "2026-03-11",
+                         "diagnosis":  {
+                                           "condition":  "Typhoid",
+                                           "description":  "Prolonged fever and abdominal discomfort. Blood test confirms infection."
+                                       },
+                         "prescription":  [
+                                              "Antibiotics",
+                                              "ORS",
+                                              "Rest"
+                                          ],
+                         "lab_report":  {
+                                            "widal_test":  "Positive",
+                                            "temperature":  "102Â°F",
+                                            "remarks":  "Typhoid confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P028",
+                         "name":  "Ritu Singh",
+                         "email":  "ritu.singh028@gmail.com",
+                         "age":  31,
+                         "gender":  "Female",
+                         "hospital":  "Fortis Hospital, Gurgaon",
+                         "doctor":  "Dr. Shalini Gupta",
+                         "report_date":  "2026-03-12",
+                         "diagnosis":  {
+                                           "condition":  "Anxiety Disorder",
+                                           "description":  "Frequent anxiety, restlessness, and sleep disturbances."
+                                       },
+                         "prescription":  [
+                                              "Anti-anxiety medication",
+                                              "Therapy sessions"
+                                          ],
+                         "lab_report":  {
+                                            "psych_eval":  "Mild anxiety",
+                                            "remarks":  "Needs counseling"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P029",
+                         "name":  "Venkatesh Rao",
+                         "email":  "venkatesh.rao029@gmail.com",
+                         "age":  54,
+                         "gender":  "Male",
+                         "hospital":  "Apollo Hospital, Chennai",
+                         "doctor":  "Dr. Prasad Rao",
+                         "report_date":  "2026-03-13",
+                         "diagnosis":  {
+                                           "condition":  "COPD",
+                                           "description":  "Chronic breathing difficulty due to long-term smoking."
+                                       },
+                         "prescription":  [
+                                              "Bronchodilators",
+                                              "Oxygen therapy"
+                                          ],
+                         "lab_report":  {
+                                            "spirometry":  "Severely reduced",
+                                            "oxygen_level":  "90%",
+                                            "remarks":  "Chronic condition"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P030",
+                         "name":  "Pallavi Desai",
+                         "email":  "pallavi.desai030@gmail.com",
+                         "age":  28,
+                         "gender":  "Female",
+                         "hospital":  "Global Hospital, Mumbai",
+                         "doctor":  "Dr. Meera Shah",
+                         "report_date":  "2026-03-14",
+                         "diagnosis":  {
+                                           "condition":  "Acne",
+                                           "description":  "Severe acne due to hormonal imbalance."
+                                       },
+                         "prescription":  [
+                                              "Topical creams",
+                                              "Oral medication"
+                                          ],
+                         "lab_report":  {
+                                            "hormone_levels":  "Slight imbalance",
+                                            "remarks":  "Moderate acne"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P031",
+                         "name":  "Sathish Kumar",
+                         "email":  "sathish.kumar031@gmail.com",
+                         "age":  39,
+                         "gender":  "Male",
+                         "hospital":  "Narayana Health, Bangalore",
+                         "doctor":  "Dr. Anand Kumar",
+                         "report_date":  "2026-03-15",
+                         "diagnosis":  {
+                                           "condition":  "Back Pain",
+                                           "description":  "Chronic lower back pain due to prolonged sitting."
+                                       },
+                         "prescription":  [
+                                              "Pain relievers",
+                                              "Physiotherapy",
+                                              "Exercise"
+                                          ],
+                         "lab_report":  {
+                                            "mri":  "No major issues",
+                                            "remarks":  "Postural problem"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P032",
+                         "name":  "Rekha Nair",
+                         "email":  "rekha.nair032@gmail.com",
+                         "age":  47,
+                         "gender":  "Female",
+                         "hospital":  "Aster Medcity, Kochi",
+                         "doctor":  "Dr. Thomas Mathew",
+                         "report_date":  "2026-03-16",
+                         "diagnosis":  {
+                                           "condition":  "Gallstones",
+                                           "description":  "Ultrasound shows stones in gallbladder causing abdominal pain."
+                                       },
+                         "prescription":  [
+                                              "Pain management",
+                                              "Surgery consultation"
+                                          ],
+                         "lab_report":  {
+                                            "ultrasound":  "Gallstones present",
+                                            "remarks":  "Surgical removal advised"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P033",
+                         "name":  "Arvind Menon",
+                         "email":  "arvind.menon033@gmail.com",
+                         "age":  49,
+                         "gender":  "Male",
+                         "hospital":  "Apollo Hospital, Chennai",
+                         "doctor":  "Dr. Karthik Narayanan",
+                         "report_date":  "2026-03-17",
+                         "diagnosis":  {
+                                           "condition":  "Ischemic Heart Disease",
+                                           "description":  "Patient reports exertional chest pain radiating to left arm, associated with shortness of breath. ECG shows ST segment depression and T-wave inversion. Risk factors include long-standing hypertension and smoking. Likely reduced coronary blood flow due to arterial narrowing."
+                                       },
+                         "prescription":  [
+                                              "Aspirin 75mg daily",
+                                              "Atorvastatin 20mg at night",
+                                              "Nitroglycerin as needed for chest pain",
+                                              "Lifestyle modification including smoking cessation and diet control"
+                                          ],
+                         "lab_report":  {
+                                            "ecg":  "ST depression noted",
+                                            "troponin":  "Slightly elevated",
+                                            "cholesterol":  "245 mg/dL",
+                                            "blood_pressure":  "150/95 mmHg",
+                                            "remarks":  "Findings suggest myocardial ischemia; cardiology follow-up required"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P034",
+                         "name":  "Bhavana Iyer",
+                         "email":  "bhavana.iyer034@gmail.com",
+                         "age":  34,
+                         "gender":  "Female",
+                         "hospital":  "MIOT Hospital, Chennai",
+                         "doctor":  "Dr. Priya Srinivasan",
+                         "report_date":  "2026-03-18",
+                         "diagnosis":  {
+                                           "condition":  "Chronic Migraine",
+                                           "description":  "Patient experiences frequent unilateral throbbing headaches lasting 6-12 hours, accompanied by nausea and photophobia. Episodes triggered by stress and lack of sleep. Neurological examination is normal, ruling out secondary causes."
+                                       },
+                         "prescription":  [
+                                              "Sumatriptan for acute attacks",
+                                              "Propranolol for prophylaxis",
+                                              "Sleep hygiene improvement",
+                                              "Stress management techniques"
+                                          ],
+                         "lab_report":  {
+                                            "mri_brain":  "Normal",
+                                            "blood_pressure":  "118/78 mmHg",
+                                            "remarks":  "Primary migraine disorder; no structural abnormalities detected"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P035",
+                         "name":  "Imran Khan",
+                         "email":  "imran.khan035@gmail.com",
+                         "age":  56,
+                         "gender":  "Male",
+                         "hospital":  "Fortis Hospital, Delhi",
+                         "doctor":  "Dr. Sameer Ali",
+                         "report_date":  "2026-03-19",
+                         "diagnosis":  {
+                                           "condition":  "Chronic Obstructive Pulmonary Disease (COPD)",
+                                           "description":  "Long-term smoker presenting with chronic cough, sputum production, and progressive breathlessness. Spirometry shows reduced FEV1/FVC ratio. Symptoms worsen during winter months."
+                                       },
+                         "prescription":  [
+                                              "Long-acting bronchodilators",
+                                              "Inhaled corticosteroids",
+                                              "Pulmonary rehabilitation",
+                                              "Smoking cessation program"
+                                          ],
+                         "lab_report":  {
+                                            "spirometry":  "FEV1/FVC \u003c 70%",
+                                            "oxygen_saturation":  "89%",
+                                            "chest_xray":  "Hyperinflated lungs",
+                                            "remarks":  "Moderate to severe COPD; requires long-term management"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P036",
+                         "name":  "Divakar Reddy",
+                         "email":  "divakar.reddy036@gmail.com",
+                         "age":  45,
+                         "gender":  "Male",
+                         "hospital":  "Care Hospital, Hyderabad",
+                         "doctor":  "Dr. Mahesh Reddy",
+                         "report_date":  "2026-03-20",
+                         "diagnosis":  {
+                                           "condition":  "Type 2 Diabetes with Neuropathy",
+                                           "description":  "Patient has poorly controlled diabetes with complaints of tingling and numbness in feet. HbA1c significantly elevated indicating chronic hyperglycemia leading to nerve damage."
+                                       },
+                         "prescription":  [
+                                              "Metformin 1000mg twice daily",
+                                              "Insulin therapy",
+                                              "Vitamin B12 supplements",
+                                              "Foot care and regular monitoring"
+                                          ],
+                         "lab_report":  {
+                                            "hba1c":  "9.1%",
+                                            "fasting_glucose":  "180 mg/dL",
+                                            "neuropathy_test":  "Positive",
+                                            "remarks":  "Diabetic neuropathy confirmed; strict glycemic control required"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P037",
+                         "name":  "Nisha Gupta",
+                         "email":  "nisha.gupta037@gmail.com",
+                         "age":  38,
+                         "gender":  "Female",
+                         "hospital":  "Max Hospital, Delhi",
+                         "doctor":  "Dr. Ritu Malhotra",
+                         "report_date":  "2026-03-21",
+                         "diagnosis":  {
+                                           "condition":  "Hypothyroidism (Autoimmune)",
+                                           "description":  "Symptoms include fatigue, cold intolerance, and weight gain. Lab findings show elevated TSH and low T4. Presence of anti-thyroid antibodies suggests autoimmune thyroiditis (Hashimoto\u0027s disease)."
+                                       },
+                         "prescription":  [
+                                              "Levothyroxine 75mcg daily",
+                                              "Regular thyroid function monitoring"
+                                          ],
+                         "lab_report":  {
+                                            "tsh":  "10.2 mIU/L",
+                                            "t4":  "Low",
+                                            "anti_tpo_antibodies":  "Positive",
+                                            "remarks":  "Autoimmune hypothyroidism confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P038",
+                         "name":  "Rahul Bose",
+                         "email":  "rahul.bose038@gmail.com",
+                         "age":  42,
+                         "gender":  "Male",
+                         "hospital":  "Ruby Hospital, Kolkata",
+                         "doctor":  "Dr. Anirban Chatterjee",
+                         "report_date":  "2026-03-22",
+                         "diagnosis":  {
+                                           "condition":  "Peptic Ulcer Disease",
+                                           "description":  "Patient complains of burning epigastric pain, especially on an empty stomach. Endoscopy reveals ulcer in the gastric lining. Likely associated with H. pylori infection and NSAID use."
+                                       },
+                         "prescription":  [
+                                              "Proton pump inhibitors",
+                                              "Antibiotics for H. pylori",
+                                              "Avoid NSAIDs"
+                                          ],
+                         "lab_report":  {
+                                            "endoscopy":  "Gastric ulcer present",
+                                            "h_pylori_test":  "Positive",
+                                            "remarks":  "Confirmed peptic ulcer disease"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P039",
+                         "name":  "Kavitha Devi",
+                         "email":  "kavitha.devi039@gmail.com",
+                         "age":  51,
+                         "gender":  "Female",
+                         "hospital":  "Global Hospital, Chennai",
+                         "doctor":  "Dr. S. Balaji",
+                         "report_date":  "2026-03-23",
+                         "diagnosis":  {
+                                           "condition":  "Breast Fibroadenoma",
+                                           "description":  "Patient noticed a painless lump in the breast. Ultrasound suggests a benign tumor. No signs of malignancy observed."
+                                       },
+                         "prescription":  [
+                                              "Regular monitoring",
+                                              "Surgical removal if necessary"
+                                          ],
+                         "lab_report":  {
+                                            "ultrasound":  "Benign lump",
+                                            "biopsy":  "Non-cancerous",
+                                            "remarks":  "Fibroadenoma confirmed; low risk"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P040",
+                         "name":  "Sandeep Yadav",
+                         "email":  "sandeep.yadav040@gmail.com",
+                         "age":  43,
+                         "gender":  "Male",
+                         "hospital":  "Narayana Health, Bangalore",
+                         "doctor":  "Dr. Kiran Shetty",
+                         "report_date":  "2026-03-24",
+                         "diagnosis":  {
+                                           "condition":  "Liver Cirrhosis",
+                                           "description":  "Patient with history of alcohol use presents with jaundice, ascites, and fatigue. Liver function tests show significant abnormalities indicating chronic liver damage."
+                                       },
+                         "prescription":  [
+                                              "Diuretics",
+                                              "Avoid alcohol completely",
+                                              "Liver supportive therapy"
+                                          ],
+                         "lab_report":  {
+                                            "alt":  "120 U/L",
+                                            "ast":  "140 U/L",
+                                            "bilirubin":  "3.5 mg/dL",
+                                            "ultrasound":  "Cirrhotic liver",
+                                            "remarks":  "Advanced liver disease"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P041",
+                         "name":  "Megha Shah",
+                         "email":  "megha.shah041@gmail.com",
+                         "age":  29,
+                         "gender":  "Female",
+                         "hospital":  "Sterling Hospital, Ahmedabad",
+                         "doctor":  "Dr. Hiral Shah",
+                         "report_date":  "2026-03-25",
+                         "diagnosis":  {
+                                           "condition":  "Iron Deficiency Anemia (Severe)",
+                                           "description":  "Patient presents with extreme fatigue, dizziness, and pallor. Hemoglobin significantly reduced. Likely due to chronic blood loss or inadequate dietary intake."
+                                       },
+                         "prescription":  [
+                                              "Iron injections",
+                                              "Oral iron supplements",
+                                              "Diet modification"
+                                          ],
+                         "lab_report":  {
+                                            "hemoglobin":  "7.5 g/dL",
+                                            "ferritin":  "5 ng/mL",
+                                            "rbc_count":  "Low",
+                                            "remarks":  "Severe anemia requiring immediate treatment"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P042",
+                         "name":  "Vikram Singh",
+                         "email":  "vikram.singh042@gmail.com",
+                         "age":  36,
+                         "gender":  "Male",
+                         "hospital":  "AIIMS Delhi",
+                         "doctor":  "Dr. Rajesh Khanna",
+                         "report_date":  "2026-03-26",
+                         "diagnosis":  {
+                                           "condition":  "Tuberculosis (Pulmonary)",
+                                           "description":  "Persistent cough for over 3 weeks, weight loss, night sweats, and fever. Sputum test positive for Mycobacterium tuberculosis."
+                                       },
+                         "prescription":  [
+                                              "Anti-TB therapy (HRZE regimen)",
+                                              "Nutritional support",
+                                              "Regular follow-up"
+                                          ],
+                         "lab_report":  {
+                                            "sputum_test":  "Positive",
+                                            "chest_xray":  "Infiltrates in upper lobes",
+                                            "remarks":  "Active pulmonary tuberculosis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P043",
+                         "name":  "Rohini Krishnan",
+                         "email":  "rohini.krishnan043@gmail.com",
+                         "age":  35,
+                         "gender":  "Female",
+                         "hospital":  "Apollo Hospital, Madurai",
+                         "doctor":  "Dr. S. Kumaravel",
+                         "report_date":  "2026-03-27",
+                         "diagnosis":  {
+                                           "condition":  "Rheumatoid Arthritis",
+                                           "description":  "Patient reports chronic joint pain, swelling, and morning stiffness lasting more than 1 hour. Symptoms are symmetrical, affecting both hands and wrists. Autoimmune etiology suspected due to elevated inflammatory markers."
+                                       },
+                         "prescription":  [
+                                              "Methotrexate weekly",
+                                              "NSAIDs for pain relief",
+                                              "Physiotherapy",
+                                              "Regular monitoring of liver function"
+                                          ],
+                         "lab_report":  {
+                                            "ra_factor":  "Positive",
+                                            "esr":  "45 mm/hr",
+                                            "crp":  "Elevated",
+                                            "remarks":  "Active inflammatory arthritis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P044",
+                         "name":  "Ashok Verma",
+                         "email":  "ashok.verma044@gmail.com",
+                         "age":  58,
+                         "gender":  "Male",
+                         "hospital":  "Fortis Hospital, Noida",
+                         "doctor":  "Dr. Deepak Saxena",
+                         "report_date":  "2026-03-28",
+                         "diagnosis":  {
+                                           "condition":  "Congestive Heart Failure",
+                                           "description":  "Patient presents with shortness of breath, swelling in legs, and fatigue. Echocardiography shows reduced ejection fraction indicating impaired cardiac function."
+                                       },
+                         "prescription":  [
+                                              "ACE inhibitors",
+                                              "Beta blockers",
+                                              "Diuretics",
+                                              "Salt restriction"
+                                          ],
+                         "lab_report":  {
+                                            "echo":  "Ejection fraction 35%",
+                                            "bnp":  "Elevated",
+                                            "blood_pressure":  "140/90 mmHg",
+                                            "remarks":  "Moderate heart failure"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P045",
+                         "name":  "Pooja Kulkarni",
+                         "email":  "pooja.kulkarni045@gmail.com",
+                         "age":  27,
+                         "gender":  "Female",
+                         "hospital":  "Ruby Hospital, Pune",
+                         "doctor":  "Dr. Sneha Patil",
+                         "report_date":  "2026-03-29",
+                         "diagnosis":  {
+                                           "condition":  "Urinary Tract Infection (Recurrent)",
+                                           "description":  "Frequent episodes of burning urination and urgency. Previous history of UTIs suggests recurrent infection likely due to incomplete treatment or hygiene factors."
+                                       },
+                         "prescription":  [
+                                              "Nitrofurantoin course",
+                                              "Increase fluid intake",
+                                              "Hygiene counseling"
+                                          ],
+                         "lab_report":  {
+                                            "urine_culture":  "E. coli present",
+                                            "wbc":  "High",
+                                            "remarks":  "Recurrent bacterial infection"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P046",
+                         "name":  "Manish Agarwal",
+                         "email":  "manish.agarwal046@gmail.com",
+                         "age":  48,
+                         "gender":  "Male",
+                         "hospital":  "Max Hospital, Delhi",
+                         "doctor":  "Dr. Rohit Jain",
+                         "report_date":  "2026-03-30",
+                         "diagnosis":  {
+                                           "condition":  "Non-Alcoholic Fatty Liver Disease (NAFLD)",
+                                           "description":  "Patient presents with mild abdominal discomfort and elevated liver enzymes. Ultrasound indicates fatty infiltration of liver not related to alcohol consumption."
+                                       },
+                         "prescription":  [
+                                              "Weight loss program",
+                                              "Diet modification",
+                                              "Regular exercise"
+                                          ],
+                         "lab_report":  {
+                                            "alt":  "78 U/L",
+                                            "ast":  "65 U/L",
+                                            "ultrasound":  "Fatty liver grade 2",
+                                            "remarks":  "Metabolic liver condition"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P047",
+                         "name":  "Anusha Reddy",
+                         "email":  "anusha.reddy047@gmail.com",
+                         "age":  31,
+                         "gender":  "Female",
+                         "hospital":  "Care Hospital, Hyderabad",
+                         "doctor":  "Dr. Lavanya Reddy",
+                         "report_date":  "2026-03-31",
+                         "diagnosis":  {
+                                           "condition":  "Polycystic Ovary Syndrome (PCOS)",
+                                           "description":  "Irregular menstrual cycles, weight gain, and acne. Hormonal imbalance confirmed with elevated androgen levels and ovarian cysts seen on ultrasound."
+                                       },
+                         "prescription":  [
+                                              "Oral contraceptive pills",
+                                              "Lifestyle changes",
+                                              "Weight management"
+                                          ],
+                         "lab_report":  {
+                                            "ultrasound":  "Multiple ovarian cysts",
+                                            "testosterone":  "Elevated",
+                                            "remarks":  "Hormonal imbalance confirmed"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P048",
+                         "name":  "Suresh Pillai",
+                         "email":  "suresh.pillai048@gmail.com",
+                         "age":  62,
+                         "gender":  "Male",
+                         "hospital":  "Aster Medcity, Kochi",
+                         "doctor":  "Dr. Jacob Mathew",
+                         "report_date":  "2026-04-01",
+                         "diagnosis":  {
+                                           "condition":  "Parkinson’s Disease",
+                                           "description":  "Patient exhibits tremors, rigidity, and slowed movements. Neurological examination indicates progressive neurodegenerative disorder."
+                                       },
+                         "prescription":  [
+                                              "Levodopa therapy",
+                                              "Physiotherapy",
+                                              "Regular neurological follow-up"
+                                          ],
+                         "lab_report":  {
+                                            "neurological_exam":  "Positive findings",
+                                            "mri":  "No acute lesions",
+                                            "remarks":  "Clinical diagnosis of Parkinson’s"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P049",
+                         "name":  "Kiran Das",
+                         "email":  "kiran.das049@gmail.com",
+                         "age":  40,
+                         "gender":  "Male",
+                         "hospital":  "Global Hospital, Chennai",
+                         "doctor":  "Dr. R. Venkatesh",
+                         "report_date":  "2026-04-02",
+                         "diagnosis":  {
+                                           "condition":  "Acute Pancreatitis",
+                                           "description":  "Severe abdominal pain radiating to the back, associated with nausea and vomiting. Likely triggered by gallstones or alcohol consumption."
+                                       },
+                         "prescription":  [
+                                              "IV fluids",
+                                              "Pain management",
+                                              "Fasting and gradual diet reintroduction"
+                                          ],
+                         "lab_report":  {
+                                            "amylase":  "High",
+                                            "lipase":  "Elevated",
+                                            "ultrasound":  "Pancreatic inflammation",
+                                            "remarks":  "Acute inflammatory condition"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P050",
+                         "name":  "Meera Nair",
+                         "email":  "meera.nair050@gmail.com",
+                         "age":  44,
+                         "gender":  "Female",
+                         "hospital":  "Narayana Health, Bangalore",
+                         "doctor":  "Dr. Anil Kumar",
+                         "report_date":  "2026-04-03",
+                         "diagnosis":  {
+                                           "condition":  "Breast Cancer (Early Stage)",
+                                           "description":  "Small lump detected in breast during routine screening. Biopsy confirms malignant cells but limited to localized area without metastasis."
+                                       },
+                         "prescription":  [
+                                              "Surgical removal",
+                                              "Radiation therapy",
+                                              "Oncology follow-up"
+                                          ],
+                         "lab_report":  {
+                                            "biopsy":  "Malignant cells detected",
+                                            "mammogram":  "Suspicious lesion",
+                                            "remarks":  "Early-stage cancer; good prognosis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P051",
+                         "name":  "Vikas Sharma",
+                         "email":  "vikas.sharma051@gmail.com",
+                         "age":  36,
+                         "gender":  "Male",
+                         "hospital":  "Fortis Hospital, Jaipur",
+                         "doctor":  "Dr. Rajeev Sharma",
+                         "report_date":  "2026-04-04",
+                         "diagnosis":  {
+                                           "condition":  "Sinusitis",
+                                           "description":  "Patient complains of facial pain, nasal congestion, and headache. Symptoms worsen when bending forward. Likely bacterial sinus infection."
+                                       },
+                         "prescription":  [
+                                              "Antibiotics",
+                                              "Steam inhalation",
+                                              "Decongestants"
+                                          ],
+                         "lab_report":  {
+                                            "xray_sinuses":  "Sinus inflammation",
+                                            "remarks":  "Acute sinusitis"
+                                        }
+                     },
+                     {
+                         "patient_id":  "P052",
+                         "name":  "Deepa Joshi",
+                         "email":  "deepa.joshi052@gmail.com",
+                         "age":  53,
+                         "gender":  "Female",
+                         "hospital":  "Sterling Hospital, Ahmedabad",
+                         "doctor":  "Dr. Rakesh Joshi",
+                         "report_date":  "2026-04-05",
+                         "diagnosis":  {
+                                           "condition":  "Osteoarthritis",
+                                           "description":  "Degenerative joint disease causing knee pain, stiffness, and reduced mobility. Symptoms worsen with activity and improve with rest."
+                                       },
+                         "prescription":  [
+                                              "Pain relievers",
+                                              "Physiotherapy",
+                                              "Weight management"
+                                          ],
+                         "lab_report":  {
+                                            "xray_knee":  "Joint space narrowing",
+                                            "remarks":  "Degenerative arthritis"
+                                        }
+                     }
+                 ]
+}

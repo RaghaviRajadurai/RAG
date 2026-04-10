@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  patient 1
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Rohini Krishnan: Rheumatoid Arthritis (relevance: 19.0%)
+  • Ashok Verma: Congestive Heart Failure (relevance: 16.3%)
+  • Kavitha Devi: Breast Fibroadenoma (relevance: 14.9%)
+  • Suresh Pillai: Parkinsons Disease (relevance: 14.7%)
+  • Anita Sharma: Depression (relevance: 12.8%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Rohini Krishnan, Age: 35, Gender: Female. Hospital: Apollo Hospital, Madurai, Doctor: Dr. S. Kumaravel, Report Date: 2026-03-27. Diagnosis: Rheumatoid Arthritis - Patient reports chronic joint pain, swelling, and morning stiffness lasting more than 1 hour. Symptoms are symmetrical, affecting both hands and wrists. Autoimmune etiology suspected due to elevated inflammatory markers.. Prescription: Methotrexate weekly, NSAIDs for pain relief, Physiotherapy, Regular monitoring of liver function. Lab Report: ra_factor: Positive; esr: 45 mm/hr; crp: Elevated. Remarks: Active inflammatory arthritis.
+
+2. Patient: Ashok Verma, Age: 58, Gender: Male. Hospital: Fortis Hospital, Noida, Doctor: Dr. Deepak Saxena, Report Date: 2026-03-28. Diagnosis: Congestive Heart Failure - Patient presents with shortness of breath, swelling in legs, and fatigue. Echocardiography shows reduced ejection fraction indicating impaired cardiac function.. Prescription: ACE inhibitors, Beta blockers, Diuretics, Salt restriction. Lab Report: echo: Ejection fraction 35%; bnp: Elevated; blood_pressure: 140/90 mmHg. Remarks: Moderate heart failure.
+
+3. Patient: Kavitha Devi, Age: 51, Gender: Female. Hospital: Global Hospital, Chennai, Doctor: Dr. S. Balaji, Report Date: 2026-03-23. Diagnosis: Breast Fibroadenoma - Patient noticed a painless lump in the breast. Ultrasound suggests a benign tumor. No signs of malignancy observed.. Prescription: Regular monitoring, Surgical removal if necessary. Lab Report: ultrasound: Benign lump; biopsy: Non-cancerous. Remarks: Fibroadenoma confirmed; low risk.
+
+4. Patient: Suresh Pillai, Age: 62, Gender: Male. Hospital: Aster Medcity, Kochi, Doctor: Dr. Jacob Mathew, Report Date: 2026-04-01. Diagnosis: Parkinsons Disease - Patient exhibits tremors, rigidity, and slowed movements. Neurological examination indicates progressive neurodegenerative disorder.. Prescription: Levodopa therapy, Physiotherapy, Regular neurological follow-up. Lab Report: neurological_exam: Positive findings; mri: No acute lesions. Remarks: Clinical diagnosis of Parkinsons.
+
+5. Patient: Anita Sharma, Age: 39, Gender: Female. Hospital: Fortis Hospital, Mumbai, Doctor: Dr. Ritu Kapoor, Report Date: 2026-03-04. Diagnosis: Depression - Persistent low mood, lack of interest, and fatigue over several weeks.. Prescription: SSRIs, Counseling therapy. Lab Report: psych_eval: Moderate depression. Remarks: Requires therapy and medication.
+
+--- QUESTION ---
+patient 1
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-01 12:50:20
+==================================================

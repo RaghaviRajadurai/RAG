@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  Who has thyroid issues?
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Meena Iyer: Hypothyroidism (relevance: 53.1%)
+  • Nisha Gupta: Hypothyroidism (Autoimmune) (relevance: 43.4%)
+  • Lakshmi Devi: Osteoporosis (relevance: 18.7%)
+  • Pooja Iyer: Vitamin D Deficiency (relevance: 17.8%)
+  • Megha Shah: Iron Deficiency Anemia (Severe) (relevance: 16.1%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Meena Iyer, Age: 40, Gender: Female. Hospital: Apollo Hospital, Madurai, Doctor: Dr. Kavitha Menon, Report Date: 2026-01-30. Diagnosis: Hypothyroidism - Low thyroid hormone levels causing fatigue, weight gain, and slow metabolism.. Prescription: Levothyroxine 50mcg daily. Lab Report: tsh: 8.5 mIU/L; t3: Low; t4: Low. Remarks: Thyroid levels below normal.
+
+2. Patient: Nisha Gupta, Age: 38, Gender: Female. Hospital: Max Hospital, Delhi, Doctor: Dr. Ritu Malhotra, Report Date: 2026-03-21. Diagnosis: Hypothyroidism (Autoimmune) - Symptoms include fatigue, cold intolerance, and weight gain. Lab findings show elevated TSH and low T4. Presence of anti-thyroid antibodies suggests autoimmune thyroiditis (Hashimoto's disease).. Prescription: Levothyroxine 75mcg daily, Regular thyroid function monitoring. Lab Report: tsh: 10.2 mIU/L; t4: Low; anti_tpo_antibodies: Positive. Remarks: Autoimmune hypothyroidism confirmed.
+
+3. Patient: Lakshmi Devi, Age: 55, Gender: Female. Hospital: Narayana Health, Bangalore, Doctor: Dr. Prakash Shetty, Report Date: 2026-02-22. Diagnosis: Osteoporosis - Low bone density increasing fracture risk.. Prescription: Calcium supplements, Vitamin D, Weight-bearing exercise. Lab Report: bone_density: Low; vitamin_d: Deficient. Remarks: High fracture risk.
+
+4. Patient: Pooja Iyer, Age: 33, Gender: Female. Hospital: MIOT Hospital, Chennai, Doctor: Dr. Anitha Krishnan, Report Date: 2026-03-02. Diagnosis: Vitamin D Deficiency - Low vitamin D levels causing fatigue and bone pain.. Prescription: Vitamin D supplements, Sunlight exposure. Lab Report: vitamin_d: 12 ng/mL; calcium: Low. Remarks: Deficiency confirmed.
+
+5. Patient: Megha Shah, Age: 29, Gender: Female. Hospital: Sterling Hospital, Ahmedabad, Doctor: Dr. Hiral Shah, Report Date: 2026-03-25. Diagnosis: Iron Deficiency Anemia (Severe) - Patient presents with extreme fatigue, dizziness, and pallor. Hemoglobin significantly reduced. Likely due to chronic blood loss or inadequate dietary intake.. Prescription: Iron injections, Oral iron supplements, Diet modification. Lab Report: hemoglobin: 7.5 g/dL; ferritin: 5 ng/mL; rbc_count: Low. Remarks: Severe anemia requiring immediate treatment.
+
+--- QUESTION ---
+Who has thyroid issues?
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-05 15:04:42
+==================================================

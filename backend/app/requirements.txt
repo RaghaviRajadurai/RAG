@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+python-jose
+passlib
+bcrypt
+python-multipart
+email-validator
+chromadb
+sentence-transformers
+rank_bm25
+numpy
+
