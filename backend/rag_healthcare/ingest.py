@@ -1,17 +1,80 @@
 """
-Ingest module: Load patient data from db.json, chunk, embed, and store in ChromaDB.
+Ingest module: Load patient data from MongoDB, chunk, embed, and store in ChromaDB.
 Supports idempotent ingestion — skips if collection already populated.
 """
 
 import json
 import os
+import sys
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 import chromadb
 
 
-def load_patient_data(db_path: str) -> list:
-    """Load patient records from db.json with proper encoding handling."""
+def load_patient_data_from_mongodb() -> list:
+    """
+    Load patient records directly from MongoDB backend.
+    
+    Returns:
+        List of patient records formatted for RAG
+    """
+    try:
+        # Add backend app to path
+        backend_dir = Path(__file__).parent.parent
+        sys.path.insert(0, str(backend_dir))
+        
+        from app.database import patients_collection, medical_records_collection
+        
+        patients = list(patients_collection.find())
+        
+        patients_data = []
+        for patient in patients:
+            patient_id = str(patient.get("_id"))
+            
+            # Get medical records for this patient
+            medical_records = list(
+                medical_records_collection.find({"patient_id": patient_id})
+            )
+            
+            # Build patient record in RAG format
+            patient_record = {
+                "patient_id": patient_id,
+                "name": patient.get("name") or "Unknown",
+                "age": patient.get("age") or 0,
+                "gender": patient.get("gender") or "Unknown",
+                "diagnosis": {
+                    "condition": patient.get("diagnosis") or "Not specified",
+                    "description": "Medical record from MongoDB backend"
+                },
+                "prescription": [patient.get("prescription")] if patient.get("prescription") else [],
+                "lab_report": {
+                    "remarks": "See medical records for detailed lab information"
+                },
+                "hospital": "MongoDB Backend",
+                "doctor": "Various",
+                "report_date": "2026-04-13"
+            }
+            
+            # Add medical record details if available
+            if medical_records:
+                first_record = medical_records[0]
+                patient_record["doctor"] = first_record.get("doctor_name") or "Unknown"
+                patient_record["lab_report"]["treatment"] = first_record.get("treatment") or "N/A"
+                if first_record.get("lab_report"):
+                    patient_record["lab_report"]["lab_results"] = first_record["lab_report"]
+            
+            patients_data.append(patient_record)
+        
+        return patients_data
+        
+    except Exception as e:
+        print(f"Error loading from MongoDB: {e}")
+        print("Falling back to db.json if available...")
+        return load_patient_data_from_file("db.json")
+
+
+def load_patient_data_from_file(db_path: str) -> list:
+    """Load patient records from db.json file with proper encoding handling."""
     try:
         with open(db_path, 'r', encoding='utf-8-sig') as f:
             data = json.load(f)
@@ -21,6 +84,22 @@ def load_patient_data(db_path: str) -> list:
         with open(db_path, 'r', encoding='latin-1') as f:
             data = json.load(f)
         return data.get('patients', [])
+    except FileNotFoundError:
+        print(f"ERROR: {db_path} not found")
+        return []
+
+
+def load_patient_data(db_path: str = None) -> list:
+    """
+    Load patient records from MongoDB (primary) or db.json (fallback).
+    
+    Args:
+        db_path: Optional path to fallback JSON file
+        
+    Returns:
+        List of patient records
+    """
+    return load_patient_data_from_mongodb()
 
 
 def create_patient_chunk(patient: dict) -> str:
@@ -90,15 +169,15 @@ def get_collection_size(collection) -> int:
 
 def ingest_patients(db_path: str = "db.json", persist_dir: str = "./chroma_db"):
     """
-    Load patient data, create embeddings, and store in ChromaDB.
+    Load patient data from MongoDB, create embeddings, and store in ChromaDB.
     Idempotent — skips if collection already has data.
     
     Args:
-        db_path: Path to db.json file
+        db_path: Unused (kept for backward compatibility)
         persist_dir: Directory for ChromaDB persistence
     """
     print("=" * 60)
-    print("HEALTHCARE RAG — INGESTION PIPELINE")
+    print("HEALTHCARE RAG — INGESTION PIPELINE (MongoDB Source)")
     print("=" * 60)
     
     # Load embedding model
@@ -131,13 +210,13 @@ def ingest_patients(db_path: str = "db.json", persist_dir: str = "./chroma_db"):
         print("\n[4/4] Done!")
         return
     
-    # Load patient data
-    print("\n[3/4] Loading patient data from db.json...")
+    # Load patient data from MongoDB
+    print("\n[3/4] Loading patient data from MongoDB...")
     try:
         patients = load_patient_data(db_path)
-        print(f"      ✓ Loaded {len(patients)} patient records")
+        print(f"      ✓ Loaded {len(patients)} patient records from MongoDB")
     except Exception as e:
-        print(f"      ✗ ERROR: Failed to load patient data: {e}")
+        print(f"      ✗ ERROR: Failed to load patient data from MongoDB: {e}")
         return
     
     # Chunk, embed, and store
