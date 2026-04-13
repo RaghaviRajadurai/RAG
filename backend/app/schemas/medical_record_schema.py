@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class MedicalRecordCreate(BaseModel):
-    patient_id: int
+    patient_id: str
     doctor_name: str
     diagnosis: str
     treatment: str

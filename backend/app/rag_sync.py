@@ -1,46 +1,43 @@
 """
 RAG Synchronization Module
-Syncs patient data from backend SQLite DB to RAG system (ChromaDB)
+Syncs patient data from backend MongoDB to RAG system (ChromaDB)
 """
 
 import json
 from pathlib import Path
 from typing import List, Dict, Any
-from sqlalchemy.orm import Session
-from app.models.patient import Patient
-from app.models.medical_record import MedicalRecord
+from app.database import patients_collection, medical_records_collection
 
 
-def export_patients_to_dict(db: Session) -> Dict[str, List[Dict[str, Any]]]:
+def export_patients_to_dict() -> Dict[str, List[Dict[str, Any]]]:
     """
-    Export all patients from SQLite backend to dictionary format for RAG ingestion.
-    
-    Args:
-        db: SQLAlchemy database session
+    Export all patients from MongoDB backend to dictionary format for RAG ingestion.
         
     Returns:
         Dictionary with 'patients' key containing list of patient records
     """
-    patients = db.query(Patient).all()
+    patients = list(patients_collection.find())
     
     patients_data = []
     for patient in patients:
+        patient_id = str(patient.get("_id"))
+
         # Get medical records for this patient
-        medical_records = db.query(MedicalRecord).filter(
-            MedicalRecord.patient_id == patient.id
-        ).all()
+        medical_records = list(
+            medical_records_collection.find({"patient_id": patient_id})
+        )
         
         # Build patient record in RAG format
         patient_record = {
-            "patient_id": f"P{patient.id}",
-            "name": patient.name or "Unknown",
-            "age": patient.age or 0,
-            "gender": patient.gender or "Unknown",
+            "patient_id": patient_id,
+            "name": patient.get("name") or "Unknown",
+            "age": patient.get("age") or 0,
+            "gender": patient.get("gender") or "Unknown",
             "diagnosis": {
-                "condition": patient.diagnosis or "Not specified",
+                "condition": patient.get("diagnosis") or "Not specified",
                 "description": "Medical record from backend database"
             },
-            "prescription": [patient.prescription] if patient.prescription else [],
+            "prescription": [patient.get("prescription")] if patient.get("prescription") else [],
             "lab_report": {
                 "remarks": "See medical records for detailed lab information"
             },
@@ -52,23 +49,22 @@ def export_patients_to_dict(db: Session) -> Dict[str, List[Dict[str, Any]]]:
         # Add medical record details if available
         if medical_records:
             first_record = medical_records[0]
-            patient_record["doctor"] = first_record.doctor_name or "Unknown"
-            patient_record["lab_report"]["treatment"] = first_record.treatment or "N/A"
-            if first_record.lab_report:
-                patient_record["lab_report"]["lab_results"] = first_record.lab_report
+            patient_record["doctor"] = first_record.get("doctor_name") or "Unknown"
+            patient_record["lab_report"]["treatment"] = first_record.get("treatment") or "N/A"
+            if first_record.get("lab_report"):
+                patient_record["lab_report"]["lab_results"] = first_record["lab_report"]
         
         patients_data.append(patient_record)
     
     return {"patients": patients_data}
 
 
-def export_to_json_file(db: Session, output_path: str = None) -> str:
+def export_to_json_file(output_path: str = None) -> str:
     """
     Export patient data to JSON file for RAG ingestion.
     
     Args:
-        db: SQLAlchemy database session
-        output_path: Path to save JSON file. Default: rag_healthcare/db_synced.json
+        output_path: Path to save JSON file. Default: backend/rag_healthcare/db_synced.json
         
     Returns:
         Path to the created JSON file
@@ -81,7 +77,7 @@ def export_to_json_file(db: Session, output_path: str = None) -> str:
         output_path = Path(output_path)
     
     # Export data
-    patients_data = export_patients_to_dict(db)
+    patients_data = export_patients_to_dict()
     
     # Create directory if it doesn't exist
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -93,26 +89,22 @@ def export_to_json_file(db: Session, output_path: str = None) -> str:
     return str(output_path)
 
 
-def get_patients_data(db: Session) -> List[Dict[str, Any]]:
+def get_patients_data() -> List[Dict[str, Any]]:
     """
     Get patient data in RAG-ready format without writing to file.
     
-    Args:
-        db: SQLAlchemy database session
-        
     Returns:
         List of patient dictionaries
     """
-    data = export_patients_to_dict(db)
+    data = export_patients_to_dict()
     return data["patients"]
 
 
-def ingest_db_patients_to_rag(db: Session, persist_dir: str = None) -> Dict[str, Any]:
+def ingest_db_patients_to_rag(persist_dir: str = None) -> Dict[str, Any]:
     """
     Ingest patients from backend DB directly to RAG (ChromaDB).
     
     Args:
-        db: SQLAlchemy database session
         persist_dir: ChromaDB persistence directory
         
     Returns:
@@ -124,6 +116,7 @@ def ingest_db_patients_to_rag(db: Session, persist_dir: str = None) -> Dict[str,
     # Setup path to RAG modules
     backend_dir = Path(__file__).parent.parent.parent
     rag_path = backend_dir / "rag_healthcare"
+    chroma_path = backend_dir / "chroma_db"
     
     if str(rag_path) not in sys.path:
         sys.path.insert(0, str(rag_path))
@@ -132,10 +125,10 @@ def ingest_db_patients_to_rag(db: Session, persist_dir: str = None) -> Dict[str,
         from ingest import ingest_patients_from_data
         
         if persist_dir is None:
-            persist_dir = str(rag_path / "chroma_db")
+            persist_dir = str(chroma_path)
         
         # Get patient data from backend DB
-        patients_data = get_patients_data(db)
+        patients_data = get_patients_data()
         
         # Ingest to RAG
         result = ingest_patients_from_data(

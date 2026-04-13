@@ -123,13 +123,18 @@ def print_report(report_text: str):
     print(report_text)
 
 
-def generate_and_save_report(result_dict: Dict, save_to_disk: bool = True) -> str:
+def generate_and_save_report(
+    result_dict: Dict,
+    save_to_disk: bool = True,
+    reports_dir: str = "./reports"
+) -> str:
     """
     Generate report from RAG result and optionally save to disk.
     
     Args:
         result_dict: Dictionary returned by RAGEngine.answer()
         save_to_disk: Whether to save the report to disk
+        reports_dir: Directory where reports should be saved
         
     Returns:
         Formatted report string
@@ -141,7 +146,7 @@ def generate_and_save_report(result_dict: Dict, save_to_disk: bool = True) -> st
     
     # Save to disk if requested
     if save_to_disk:
-        save_report(report)
+        save_report(report, reports_dir=reports_dir)
     
     return report
 

@@ -1,16 +1,18 @@
-from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 import sys
 import os
 from pathlib import Path
-from app.database import SessionLocal
-from app.rag_sync import ingest_db_patients_to_rag, export_to_json_file
+from app.auth.rbac import get_current_user, require_roles
+from app.rag_sync import ingest_db_patients_to_rag, export_to_json_file, get_patients_data
 
-# Calculate the RAG folder path - it's a sibling to the backend folder
+# Resolve backend-oriented paths for RAG modules and data directories.
 current_file = Path(__file__).resolve()
-backend_dir = current_file.parents[3]  # c:\Users\raghavi\Ramana\Ramana
+backend_dir = current_file.parents[3]
+project_root = backend_dir.parent
 rag_path = backend_dir / "rag_healthcare"
+chroma_path = backend_dir / "chroma_db"
+reports_path = project_root / "reports"
 
 # Add to Python path at the beginning
 if str(rag_path) not in sys.path:
@@ -53,7 +55,9 @@ class QueryResponse(BaseModel):
     error: str = None
 
 @router.post("/query", response_model=QueryResponse)
-async def query_rag(request: QueryRequest):
+async def query_rag(request: QueryRequest, current_user: dict = Depends(get_current_user)):
+    require_roles(current_user, {"doctor", "admin"})
+
     # Import RAG modules here to avoid module-level import issues
     try:
         if not rag_available:
@@ -61,11 +65,11 @@ async def query_rag(request: QueryRequest):
             from rag_engine import RAGEngine
             from report_generator import generate_report, save_report
 
-        engine = RAGEngine(persist_dir=str(rag_path / "chroma_db"))
+        engine = RAGEngine(persist_dir=str(chroma_path))
         result = engine.answer(request.query, top_k=request.top_k)
 
         report_text = generate_report(result)
-        report_path = save_report(report_text, reports_dir=str(rag_path / "reports"))
+        report_path = save_report(report_text, reports_dir=str(reports_path))
 
         return QueryResponse(
             query=request.query,
@@ -85,7 +89,9 @@ async def query_rag(request: QueryRequest):
         )
 
 @router.get("/health")
-async def rag_health_check():
+async def rag_health_check(current_user: dict = Depends(get_current_user)):
+    require_roles(current_user, {"doctor", "admin"})
+
     # Try to import RAG modules here as well
     try:
         if not rag_available:
@@ -116,13 +122,6 @@ async def rag_health_check():
             "error": str(e)
         }
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 class SyncResponse(BaseModel):
     status: str
     message: str
@@ -131,9 +130,11 @@ class SyncResponse(BaseModel):
     error: str = None
 
 @router.post("/sync", response_model=SyncResponse)
-async def sync_db_to_rag(db: Session = Depends(get_db)):
+async def sync_db_to_rag(current_user: dict = Depends(get_current_user)):
+    require_roles(current_user, {"admin"})
+
     """
-    Synchronize patient data from backend SQLite database to RAG system (ChromaDB).
+    Synchronize patient data from backend MongoDB to RAG system (ChromaDB).
     This endpoint:
     1. Exports all patients from backend DB
     2. Clears existing RAG index
@@ -142,7 +143,7 @@ async def sync_db_to_rag(db: Session = Depends(get_db)):
     Useful after adding/updating patients in the backend.
     """
     try:
-        result = ingest_db_patients_to_rag(db, persist_dir=str(rag_path / "chroma_db"))
+        result = ingest_db_patients_to_rag(persist_dir=str(chroma_path))
         
         if result.get("status") == "success":
             return SyncResponse(
@@ -165,19 +166,22 @@ async def sync_db_to_rag(db: Session = Depends(get_db)):
         )
 
 @router.post("/export")
-async def export_db_to_json(db: Session = Depends(get_db)):
+async def export_db_to_json(current_user: dict = Depends(get_current_user)):
+    require_roles(current_user, {"admin"})
+
     """
-    Export backend SQLite patient data to JSON file.
+    Export backend MongoDB patient data to JSON file.
     Useful for debugging and manual RAG ingestion.
     """
     try:
-        output_path = export_to_json_file(db)
+        patients_count = len(get_patients_data())
+        output_path = export_to_json_file()
         
         return {
             "status": "success",
             "message": "Data exported to JSON",
             "output_file": output_path,
-            "patients_exported": len(db.query(db.query(db.query.__self__.__class__).all()) if hasattr(db, 'query') else [])
+            "patients_exported": patients_count
         }
     except Exception as e:
         return {

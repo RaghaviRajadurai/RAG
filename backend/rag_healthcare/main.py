@@ -14,6 +14,13 @@ from ingest import ingest_patients, get_collection_size, get_or_create_chroma_cl
 from rag_engine import RAGEngine
 from report_generator import generate_and_save_report
 
+BASE_DIR = Path(__file__).resolve().parent
+BACKEND_DIR = BASE_DIR.parent
+PROJECT_ROOT = BACKEND_DIR.parent
+CHROMA_DIR = BACKEND_DIR / "chroma_db"
+DB_JSON_PATH = BASE_DIR / "db.json"
+REPORTS_DIR = PROJECT_ROOT / "reports"
+
 
 def print_banner():
     """Print startup banner."""
@@ -29,7 +36,7 @@ def print_banner():
 
 def check_and_ingest():
     """Check if data needs ingestion; ingest if necessary."""
-    persist_dir = "./chroma_db"
+    persist_dir = str(CHROMA_DIR)
     
     print("Checking database state...")
     
@@ -41,14 +48,14 @@ def check_and_ingest():
         if count == 0:
             print(f"✓ Collection exists but is empty ({count} docs).")
             print("\nInitiating auto-ingestion...")
-            ingest_patients(db_path="db.json", persist_dir=persist_dir)
+            ingest_patients(db_path=str(DB_JSON_PATH), persist_dir=persist_dir)
         else:
             print(f"✓ Database ready ({count} patient records indexed)")
     except Exception:
         # Collection doesn't exist, run full ingest
         print("✓ No existing database found.")
         print("\nInitiating ingestion...")
-        ingest_patients(db_path="db.json", persist_dir=persist_dir)
+        ingest_patients(db_path=str(DB_JSON_PATH), persist_dir=persist_dir)
 
 
 def print_help():
@@ -97,7 +104,7 @@ def run_query_loop():
     print("=" * 70)
     print("Type 'help' for usage, 'quit' to exit, or enter your medical query.\n")
     
-    engine = RAGEngine(persist_dir="./chroma_db")
+    engine = RAGEngine(persist_dir=str(CHROMA_DIR))
     
     while True:
         try:
@@ -121,7 +128,7 @@ def run_query_loop():
             
             # Generate and save report
             print()
-            generate_and_save_report(result, save_to_disk=True)
+            generate_and_save_report(result, save_to_disk=True, reports_dir=str(REPORTS_DIR))
             
             print("\n" + "=" * 70 + "\n")
             

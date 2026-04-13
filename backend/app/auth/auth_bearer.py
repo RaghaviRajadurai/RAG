@@ -1,9 +1,11 @@
 
-from fastapi import Request, HTTPException
+import os
+
+from fastapi import HTTPException, Request
 from fastapi.security import HTTPBearer
 from jose import jwt
 
-SECRET_KEY = "healthcareprojectsecret"
+SECRET_KEY = os.getenv("JWT_SECRET_KEY", "healthcareproject")
 ALGORITHM = "HS256"
 
 class JWTBearer(HTTPBearer):
@@ -16,5 +18,5 @@ class JWTBearer(HTTPBearer):
             try:
                 payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
                 return payload
-            except:
+            except Exception:
                 raise HTTPException(status_code=403, detail="Invalid token")

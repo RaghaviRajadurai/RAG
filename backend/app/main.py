@@ -1,9 +1,9 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
-from app.database import engine, Base
 from app.routes import auth_routes, patient_routes
 from app.routes import medical_record_routes
 from app.routes import doctor_routes, records_routes
+from app.routes import admin_routes
 
 # Create FastAPI app
 app = FastAPI(title="Healthcare API", description="Healthcare Management System")
@@ -26,15 +26,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
-
 # Include API routers
 app.include_router(auth_routes.router, prefix="/auth", tags=["Authentication"])
 app.include_router(patient_routes.router, prefix="/api", tags=["Patients"])
 app.include_router(medical_record_routes.router, prefix="/api", tags=["Medical Records"])
 app.include_router(doctor_routes.router, prefix="/api", tags=["Doctors"])
 app.include_router(records_routes.router, prefix="/api", tags=["Records"])
+app.include_router(admin_routes.router, prefix="/api", tags=["Admin"])
 
 # Include RAG routes if available
 try:
