@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  Whats the current condition of patient Meera Nair?
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Meera Nair: Hypothyroidism (relevance: 42.3%)
+  • Priya Nair: Asthma (relevance: 25.8%)
+  • Ananya Sharma: string (relevance: 20.6%)
+  • Karthik Srinivasan: Chronic Kidney Disease (relevance: 20.4%)
+  • Ravi Kumar: Hypertension (relevance: 20.0%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Meera Nair, Age: 42, Gender: Female. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Hypothyroidism - Medical record from backend database. Prescription: Levothyroxine 50mcg. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+2. Patient: Priya Nair, Age: 28, Gender: Female. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Asthma - Medical record from backend database. Prescription: Salbutamol inhaler. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+3. Patient: Ananya Sharma, Age: 0, Gender: Female. Hospital: Backend Database, Doctor: Dr. Sharma, Report Date: 2026-04-05. Diagnosis: string - Medical record from backend database. Prescription: string. Lab Report: treatment: Lifestyle changes and medication; lab_results: Blood pressure 150/95. Remarks: See medical records for detailed lab information.
+
+4. Patient: Karthik Srinivasan, Age: 50, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Chronic Kidney Disease - Medical record from backend database. Prescription: Losartan 50mg. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+5. Patient: Ravi Kumar, Age: 45, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Hypertension - Medical record from backend database. Prescription: Amlodipine 5mg daily. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+--- QUESTION ---
+Whats the current condition of patient Meera Nair?
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-13 12:54:42
+==================================================

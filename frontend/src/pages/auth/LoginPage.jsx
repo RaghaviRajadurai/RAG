@@ -44,7 +44,7 @@ function LoginPage() {
           </div>
           <h1 className="text-3xl font-semibold tracking-tight text-slate-50 md:text-4xl">
             Log in to your{" "}
-            <span className="bg-gradient-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-cyan-400 bg-clip-text text-transparent">
               AI-enabled
             </span>{" "}
             clinical workspace.
@@ -66,7 +66,7 @@ function LoginPage() {
         </div>
 
         <div className="relative">
-          <div className="pointer-events-none absolute -inset-8 rounded-3xl bg-gradient-to-tr from-primary/40 via-cyan-400/10 to-transparent opacity-70 blur-3xl" />
+          <div className="pointer-events-none absolute -inset-8 rounded-3xl bg-linear-to-tr from-primary/40 via-cyan-400/10 to-transparent opacity-70 blur-3xl" />
           <div className="relative rounded-3xl border border-slate-800/80 bg-slate-950/80 p-6 shadow-2xl shadow-slate-950/80 backdrop-blur-2xl">
             <h2 className="text-lg font-semibold text-slate-50">
               Sign in to continue

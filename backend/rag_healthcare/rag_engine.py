@@ -4,7 +4,11 @@ No LLM API calls here — just prepare the prompt for later integration.
 """
 
 from typing import List, Dict
-from retriever import HybridRetriever
+
+try:
+    from .retriever import HybridRetriever
+except ImportError:
+    from retriever import HybridRetriever
 
 
 class RAGEngine:
@@ -61,6 +65,17 @@ Be specific and cite patient names/IDs when relevant.
 Keep the response clear and medically appropriate."""
         
         return prompt
+
+    def _build_structured_answer(self, query: str, retrieved_results: List[Dict]) -> str:
+        """Build a deterministic, human-readable summary without external LLM calls."""
+        if not retrieved_results:
+            return "I could not find the patient details needed to answer that question."
+
+        top = retrieved_results[0]
+        name = top.get("name", "Unknown")
+        condition = top.get("condition", "Not specified")
+
+        return f"{name} currently has {condition}."
     
     def answer(self, query: str, top_k: int = 5) -> Dict:
         """
@@ -83,6 +98,7 @@ Keep the response clear and medically appropriate."""
         
         # Build LLM-ready prompt
         prompt = self._build_prompt(query, retrieved_results)
+        answer = self._build_structured_answer(query, retrieved_results)
         
         # Extract retrieved patient info
         retrieved_patients = [
@@ -98,6 +114,7 @@ Keep the response clear and medically appropriate."""
         # Return result dictionary
         result = {
             "query": query,
+            "answer": answer,
             "retrieved_patients": retrieved_patients,
             "retrieved_count": len(retrieved_results),
             "prompt_ready": True,

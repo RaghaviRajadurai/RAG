@@ -8,7 +8,7 @@ from app.rag_sync import ingest_db_patients_to_rag, export_to_json_file, get_pat
 
 # Resolve backend-oriented paths for RAG modules and data directories.
 current_file = Path(__file__).resolve()
-backend_dir = current_file.parents[3]
+backend_dir = current_file.parents[2]
 project_root = backend_dir.parent
 rag_path = backend_dir / "rag_healthcare"
 chroma_path = backend_dir / "chroma_db"
@@ -60,16 +60,23 @@ async def query_rag(request: QueryRequest, current_user: dict = Depends(get_curr
 
     # Import RAG modules here to avoid module-level import issues
     try:
-        if not rag_available:
-            # Try to import again in case the module-level import failed
-            from rag_engine import RAGEngine
-            from report_generator import generate_report, save_report
+        engine_cls = RAGEngine
+        generate_report_fn = generate_report
+        save_report_fn = save_report
 
-        engine = RAGEngine(persist_dir=str(chroma_path))
+        if engine_cls is None or generate_report_fn is None or save_report_fn is None:
+            # Try to import again in case the module-level import failed
+            from rag_engine import RAGEngine as ImportedRAGEngine
+            from report_generator import generate_report as imported_generate_report, save_report as imported_save_report
+            engine_cls = ImportedRAGEngine
+            generate_report_fn = imported_generate_report
+            save_report_fn = imported_save_report
+
+        engine = engine_cls(persist_dir=str(chroma_path))
         result = engine.answer(request.query, top_k=request.top_k)
 
-        report_text = generate_report(result)
-        report_path = save_report(report_text, reports_dir=str(reports_path))
+        report_text = generate_report_fn(result)
+        report_path = save_report_fn(report_text, reports_dir=str(reports_path))
 
         return QueryResponse(
             query=request.query,
@@ -94,10 +101,10 @@ async def rag_health_check(current_user: dict = Depends(get_current_user)):
 
     # Try to import RAG modules here as well
     try:
-        if not rag_available:
-            from rag_engine import RAGEngine
-            from report_generator import generate_report, save_report
-            rag_available_local = True
+        if RAGEngine is None or generate_report is None or save_report is None:
+            from rag_engine import RAGEngine as _ImportedRAGEngine
+            from report_generator import generate_report as _imported_generate_report, save_report as _imported_save_report
+            rag_available_local = bool(_ImportedRAGEngine and _imported_generate_report and _imported_save_report)
         else:
             rag_available_local = True
 

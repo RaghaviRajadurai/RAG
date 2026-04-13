@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Stethoscope, LayoutDashboard, Bot, FileText, Users } from "lucide-react";
+import { Stethoscope, LayoutDashboard, Bot, FileText, Users, FlaskConical } from "lucide-react";
 import { cn } from "../utils/cn.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import { Button } from "../components/ui/button.jsx";
@@ -90,11 +90,39 @@ function DashboardLayout({ variant, children }) {
             label: "My Overview",
           },
         ]
+      : variant === "lab"
+      ? [
+          {
+            to: "/lab/dashboard",
+            icon: FlaskConical,
+            label: "Lab Dashboard",
+          },
+          {
+            to: "/lab/reports/create",
+            icon: FileText,
+            label: "Create Report",
+          },
+          {
+            to: "/lab/reports/update",
+            icon: FileText,
+            label: "Update Report",
+          },
+          {
+            to: "/lab/reports/verify",
+            icon: FileText,
+            label: "Verify Report",
+          },
+        ]
       : [
           {
             to: "/admin/dashboard",
             icon: Users,
             label: "User & Access",
+          },
+          {
+            to: "/admin/reports",
+            icon: FileText,
+            label: "Reports",
           },
         ];
 
@@ -111,9 +139,9 @@ function DashboardLayout({ variant, children }) {
               <SidebarLink key={link.to} {...link} />
             ))}
           </nav>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-primary/50 to-transparent" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-px bg-linear-to-b from-transparent via-primary/50 to-transparent" />
         </aside>
-        <main className="flex-1 bg-gradient-to-b from-slate-950/40 via-slate-950/80 to-slate-950 px-4 py-4 md:px-6 md:py-6">
+        <main className="flex-1 bg-linear-to-b from-slate-950/40 via-slate-950/80 to-slate-950 px-4 py-4 md:px-6 md:py-6">
           <div className="mx-auto max-w-6xl space-y-4 md:space-y-6">
             {children}
           </div>

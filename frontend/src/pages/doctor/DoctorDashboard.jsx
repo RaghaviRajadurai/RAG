@@ -36,27 +36,17 @@ function DoctorDashboard() {
     if (dischargeLoading) return;
     setDischargeLoading(true);
     try {
-      const res = await apiClient.post("/discharge/preview", {
+      const res = await apiClient.post("/api/doctor/discharge/preview", {
         patient_search: patientSearch || undefined,
       });
-      setDischargePreview(
-        res.data || {
-          diagnosis: "Community-acquired pneumonia, stable.",
-          treatment:
-            "Completed course of IV ceftriaxone, transitioned to oral amoxicillin-clavulanate.",
-          labs:
-            "CRP trending down, WBC normalized, blood cultures negative at 48 hours.",
-          followUp:
-            "Review with primary care physician in 7 days. Repeat chest X-ray in 6 weeks.",
-        }
-      );
+      setDischargePreview(res.data || null);
     } catch (error) {
       showToast({
         variant: "error",
         title: "Unable to generate summary",
         description:
           error.response?.data?.detail ||
-          "Check backend /discharge/preview endpoint.",
+          "Check backend /api/doctor/discharge/preview endpoint.",
       });
     } finally {
       setDischargeLoading(false);
@@ -64,10 +54,34 @@ function DoctorDashboard() {
   };
 
   const handleDownloadPdf = () => {
-    showToast({
-      title: "Download started",
-      description: "Hook this to your PDF generation pipeline.",
-    });
+    if (!dischargePreview) {
+      showToast({
+        variant: "error",
+        title: "No preview available",
+        description: "Generate discharge preview before downloading PDF.",
+      });
+      return;
+    }
+
+    apiClient
+      .post("/api/doctor/discharge/pdf", dischargePreview, { responseType: "blob" })
+      .then((res) => {
+        const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.setAttribute("download", `discharge_summary_${(dischargePreview.patient_name || "patient").replace(/\s+/g, "_").toLowerCase()}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(blobUrl);
+      })
+      .catch((error) => {
+        showToast({
+          variant: "error",
+          title: "PDF generation failed",
+          description: error.response?.data?.detail || "Unable to generate discharge PDF.",
+        });
+      });
   };
 
   const handleSaveRecords = () => {

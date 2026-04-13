@@ -71,7 +71,7 @@ def export_to_json_file(output_path: str = None) -> str:
     """
     if output_path is None:
         # Default to rag_healthcare directory
-        backend_dir = Path(__file__).parent.parent.parent
+        backend_dir = Path(__file__).resolve().parents[1]
         output_path = backend_dir / "rag_healthcare" / "db_synced.json"
     else:
         output_path = Path(output_path)
@@ -114,7 +114,7 @@ def ingest_db_patients_to_rag(persist_dir: str = None) -> Dict[str, Any]:
     from pathlib import Path
     
     # Setup path to RAG modules
-    backend_dir = Path(__file__).parent.parent.parent
+    backend_dir = Path(__file__).resolve().parents[1]
     rag_path = backend_dir / "rag_healthcare"
     chroma_path = backend_dir / "chroma_db"
     

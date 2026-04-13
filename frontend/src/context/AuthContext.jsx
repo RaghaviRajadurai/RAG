@@ -13,6 +13,14 @@ import { useToast } from "./ToastContext.jsx";
 
 const AuthContext = createContext(null);
 
+function normalizeRole(role) {
+  return String(role || "")
+    .trim()
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ");
+}
+
 function getRoleFromToken(token) {
   try {
     const decoded = jwtDecode(token);
@@ -40,8 +48,11 @@ function AuthProvider({ children }) {
   const login = useCallback(
     async (credentials) => {
       try {
-        const res = await apiClient.post("/auth/login", credentials);
-        const token = res.data?.token;
+        const res = await apiClient.post("/auth/login", {
+          username: credentials.email,
+          password: credentials.password,
+        });
+        const token = res.data?.access_token;
         if (!token) {
           throw new Error("Token missing from response");
         }
@@ -49,13 +60,16 @@ function AuthProvider({ children }) {
         const role = getRoleFromToken(token);
         const authUser = { token, role };
         setUser(authUser);
+        const normalizedRole = normalizeRole(role);
 
-        if (role === "Doctor") {
+        if (normalizedRole === "doctor") {
           navigate("/doctor/dashboard", { replace: true });
-        } else if (role === "Patient") {
+        } else if (normalizedRole === "patient") {
           navigate("/patient/dashboard", { replace: true });
-        } else if (role === "Admin") {
+        } else if (normalizedRole === "admin") {
           navigate("/admin/dashboard", { replace: true });
+        } else if (normalizedRole === "lab technician") {
+          navigate("/lab/dashboard", { replace: true });
         } else {
           navigate("/", { replace: true });
         }

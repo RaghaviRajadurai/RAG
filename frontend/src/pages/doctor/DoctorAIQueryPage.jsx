@@ -23,51 +23,107 @@ function DoctorAIQueryPage() {
   const [patientId, setPatientId] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
+  const [reportSummary, setReportSummary] = useState(null);
+  const [reportLoading, setReportLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!query.trim() || loading) return;
     setLoading(true);
     setResponse(null);
+    setReportSummary(null);
     try {
-      const res = await apiClient.post("/ask-query", {
-        query,
-        patient_id: patientId || undefined,
+      const res = await apiClient.post("/api/rag/query", {
+        query: query.trim(),
       });
-      setResponse(
-        res.data || {
-          answer:
-            "Example structured response from your backend. Map this to your real RAG output.",
-          timestamp: new Date().toISOString(),
-          patient_id: patientId || "H-102938",
-          documents: [
-            {
-              id: "doc-1",
-              title: "Discharge note 12 Feb 2026",
-              snippet:
-                "Patient admitted with community-acquired pneumonia, started on IV antibiotics...",
-            },
-          ],
-        }
-      );
+
+      if (res.data?.error) {
+        throw new Error(res.data.error);
+      }
+
+      setResponse({
+        answer:
+          res.data?.result?.answer ||
+          res.data?.result?.note ||
+          "Information not available in current patient records.",
+        retrieved_patients: res.data?.result?.retrieved_patients || [],
+        timestamp: new Date().toISOString(),
+        patient_id: patientId || "auto-lookup",
+      });
     } catch (error) {
       showToast({
         variant: "error",
         title: "AI query failed",
         description:
-          error.response?.data?.detail || "Check connectivity to /ask-query.",
+          error.response?.data?.detail || "Failed to process your query. Please check your connection.",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGenerateReport = () => {
-    showToast({
-      title: "Generate report",
-      description:
-        "Hook this button to your structured report /summary endpoint.",
-    });
+  const handleGenerateReport = async () => {
+    if (!response || reportLoading) return;
+    setReportLoading(true);
+    try {
+      const fallbackPatient = response?.retrieved_patients?.[0]?.name || "";
+      const res = await apiClient.post("/api/doctor/report/summary", {
+        patient_search: patientId || fallbackPatient || undefined,
+        query,
+        ai_answer: response?.answer || undefined,
+      });
+
+      setReportSummary(res.data || null);
+      showToast({
+        title: "Report generated",
+        description: `Structured summary generated for ${res.data?.patient_name || "patient"}.`,
+      });
+    } catch (error) {
+      showToast({
+        variant: "error",
+        title: "Generate report failed",
+        description:
+          error.response?.data?.detail || "Unable to generate structured summary report.",
+      });
+    } finally {
+      setReportLoading(false);
+    }
+  };
+
+  const handleDownloadReportPdf = async () => {
+    if (!reportSummary?.summary) return;
+
+    try {
+      const res = await apiClient.post(
+        "/api/doctor/report/pdf",
+        {
+          patient_id: reportSummary?.patient_id,
+          patient_name: reportSummary?.patient_name,
+          summary: reportSummary?.summary,
+          query,
+          ai_answer: response?.answer,
+        },
+        { responseType: "blob" }
+      );
+
+      const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute(
+        "download",
+        `structured_report_${(reportSummary?.patient_name || "patient").replace(/\s+/g, "_").toLowerCase()}.pdf`
+      );
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      showToast({
+        variant: "error",
+        title: "Download failed",
+        description: error.response?.data?.detail || "Unable to download report PDF.",
+      });
+    }
   };
 
   return (
@@ -194,27 +250,41 @@ function DoctorAIQueryPage() {
                   </section>
                   <section>
                     <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                      Referenced documents
+                      Retrieved patient records
                     </h3>
                     <ul className="mt-1 space-y-1.5 text-xs">
-                      {(response.documents || []).map((doc) => (
+                      {(response.retrieved_patients || []).map((patient, idx) => (
                         <li
-                          key={doc.id}
-                          className="rounded-xl border border-slate-800/80 bg-slate-950/80 p-2"
+                          key={idx}
+                          className="rounded-xl border border-sky-500/30 bg-sky-500/5 p-2"
                         >
-                          <p className="font-medium text-slate-200">
-                            {doc.title}
+                          <p className="font-medium text-sky-200">
+                            {patient.name || "Unknown"} – {patient.condition || "N/A"}
                           </p>
-                          <p className="text-slate-400">{doc.snippet}</p>
+                          <p className="text-slate-400">{patient.hospital || "N/A"}</p>
+                          <p className="text-xs text-slate-500">Score: {(patient.score || 0).toFixed(3)}</p>
                         </li>
                       ))}
-                      {(!response.documents || response.documents.length === 0) && (
+                      {(!response.retrieved_patients || response.retrieved_patients.length === 0) && (
                         <li className="text-slate-500">
-                          Backend did not return explicit document references.
+                          No matching patient records found.
                         </li>
                       )}
                     </ul>
                   </section>
+                  {reportSummary?.summary && (
+                    <section>
+                      <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                        Generated summary report
+                      </h3>
+                      <p className="mt-1 whitespace-pre-wrap">{reportSummary.summary}</p>
+                      <div className="mt-3">
+                        <Button type="button" variant="outline" onClick={handleDownloadReportPdf}>
+                          Download report PDF
+                        </Button>
+                      </div>
+                    </section>
+                  )}
                 </div>
               )}
             </ScrollArea>
@@ -223,9 +293,9 @@ function DoctorAIQueryPage() {
                 type="button"
                 variant="outline"
                 onClick={handleGenerateReport}
-                disabled={!response}
+                disabled={!response || reportLoading}
               >
-                Generate report
+                {reportLoading ? "Generating report..." : "Generate report"}
               </Button>
             </div>
           </CardContent>

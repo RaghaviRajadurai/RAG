@@ -1,0 +1,54 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  I want the lab report of the patient Suresh Patel?
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Suresh Patel: Coronary Artery Disease (relevance: 39.4%)
+  • Suresh Patel: Coronary Artery Disease (relevance: 39.4%)
+  • Ananya Sharma: string (relevance: 24.4%)
+  • Sneha Kapoor: Anemia (relevance: 23.2%)
+  • Rahul Verma: Gastritis (relevance: 22.3%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Suresh Patel, Age: 55, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Coronary Artery Disease - Medical record from backend database. Prescription: Aspirin 75mg daily. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+2. Patient: Suresh Patel, Age: 55, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Coronary Artery Disease - Medical record from backend database. Prescription: Aspirin 75mg daily. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+3. Patient: Ananya Sharma, Age: 0, Gender: Female. Hospital: Backend Database, Doctor: Dr. Sharma, Report Date: 2026-04-05. Diagnosis: string - Medical record from backend database. Prescription: string. Lab Report: treatment: Lifestyle changes and medication; lab_results: Blood pressure 150/95. Remarks: See medical records for detailed lab information.
+
+4. Patient: Sneha Kapoor, Age: 29, Gender: Female. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Anemia - Medical record from backend database. Prescription: Iron supplements. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+5. Patient: Rahul Verma, Age: 35, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Gastritis - Medical record from backend database. Prescription: Omeprazole 20mg. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+--- QUESTION ---
+I want the lab report of the patient Suresh Patel?
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-13 13:02:33
+==================================================
