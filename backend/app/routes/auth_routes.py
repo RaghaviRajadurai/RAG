@@ -4,7 +4,12 @@ import secrets
 from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException
 from app.database import users_collection, otp_verifications_collection
-from app.schemas.otp_schema import OTPRegisterRequest, OTPConfirmRequest, LoginRequest
+from app.schemas.otp_schema import (
+    OTPRegisterRequest,
+    OTPConfirmRequest,
+    LoginRequest,
+    LoginOTPConfirmRequest,
+)
 from app.auth.jwt_handler import create_token
 from app.auth.auth_handler import hash_password, verify_password
 
@@ -15,6 +20,11 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 465))
 EMAIL_USER = os.environ.get("EMAIL_USER")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_FROM = os.environ.get("EMAIL_FROM", EMAIL_USER)
+OTP_LOGIN_TARGET_EMAIL = os.environ.get("OTP_LOGIN_TARGET_EMAIL", "aswinraj868@gmail.com").strip().lower()
+OTP_LOGIN_TARGET_EMAIL_ALIASES = {
+    OTP_LOGIN_TARGET_EMAIL,
+    "aswinraj868@gmail",
+}
 
 
 def generate_otp_code(length: int = 6) -> str:
@@ -56,6 +66,12 @@ def send_otp_email(recipient: str, otp_code: str, username: str):
         server.sendmail(EMAIL_FROM, recipient, message)
 
 
+def requires_login_otp(user: dict) -> bool:
+    role = (user.get("role") or "").strip().lower()
+    email = (user.get("email") or "").strip().lower()
+    return role == "patient" and email in OTP_LOGIN_TARGET_EMAIL_ALIASES
+
+
 @router.post("/register")
 def register(user: OTPRegisterRequest):
     existing_user = users_collection.find_one(
@@ -66,8 +82,11 @@ def register(user: OTPRegisterRequest):
 
     existing_pending = otp_verifications_collection.find_one(
         {
-            "$or": [{"username": user.username}, {"email": user.email}],
-            "verified": False,
+            "$and": [
+                {"$or": [{"username": user.username}, {"email": user.email}]},
+                {"verified": False},
+                {"$or": [{"purpose": "register"}, {"purpose": {"$exists": False}}]},
+            ]
         },
         sort=[("created_at", -1)],
     )
@@ -82,6 +101,7 @@ def register(user: OTPRegisterRequest):
         "email": user.email,
         "password_hash": hash_password(user.password),
         "role": user.role,
+        "purpose": "register",
         "otp_code": otp_code,
         "expires_at": expires_at,
         "verified": False,
@@ -102,9 +122,12 @@ def register(user: OTPRegisterRequest):
 def confirm_registration(data: OTPConfirmRequest):
     pending = otp_verifications_collection.find_one(
         {
-            "email": data.email,
-            "otp_code": data.otp_code,
-            "verified": False,
+            "$and": [
+                {"email": data.email},
+                {"otp_code": data.otp_code},
+                {"verified": False},
+                {"$or": [{"purpose": "register"}, {"purpose": {"$exists": False}}]},
+            ]
         },
         sort=[("created_at", -1)],
     )
@@ -155,6 +178,66 @@ def login(login_data: LoginRequest):
 
     if not verify_password(login_data.password, user["password"]):
         raise HTTPException(status_code=401, detail="Invalid password.")
+
+    if requires_login_otp(user):
+        otp_code = generate_otp_code()
+        expires_at = datetime.utcnow() + timedelta(minutes=10)
+
+        otp_verifications_collection.insert_one(
+            {
+                "purpose": "login",
+                "user_id": str(user["_id"]),
+                "username": user.get("username"),
+                "email": user.get("email"),
+                "role": user.get("role", "Patient"),
+                "otp_code": otp_code,
+                "expires_at": expires_at,
+                "verified": False,
+                "created_at": datetime.utcnow(),
+            }
+        )
+
+        try:
+            send_otp_email(user["email"], otp_code, user.get("username") or "User")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=f"Failed to send OTP email: {exc}")
+
+        return {
+            "otp_required": True,
+            "message": "OTP sent to your email. Please verify to complete login.",
+            "email": user.get("email"),
+        }
+
+    token = create_token(str(user["_id"]), user.get("role", "Patient"))
+    return {"access_token": token}
+
+
+@router.post("/login/confirm")
+def confirm_login_otp(data: LoginOTPConfirmRequest):
+    pending = otp_verifications_collection.find_one(
+        {
+            "purpose": "login",
+            "email": data.email,
+            "otp_code": data.otp_code,
+            "verified": False,
+        },
+        sort=[("created_at", -1)],
+    )
+
+    if not pending:
+        raise HTTPException(status_code=400, detail="Invalid OTP or email.")
+
+    if pending["expires_at"] < datetime.utcnow():
+        raise HTTPException(status_code=400, detail="OTP has expired. Please login again.")
+
+    user = users_collection.find_one({"email": data.email})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+
+    otp_verifications_collection.update_one(
+        {"_id": pending["_id"]},
+        {"$set": {"verified": True, "verified_at": datetime.utcnow()}},
+    )
 
     token = create_token(str(user["_id"]), user.get("role", "Patient"))
     return {"access_token": token}

@@ -15,3 +15,8 @@ class OTPConfirmRequest(BaseModel):
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+
+class LoginOTPConfirmRequest(BaseModel):
+    email: EmailStr
+    otp_code: str

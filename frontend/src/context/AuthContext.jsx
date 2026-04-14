@@ -52,6 +52,13 @@ function AuthProvider({ children }) {
           username: credentials.email,
           password: credentials.password,
         });
+        if (res.data?.otp_required) {
+          return {
+            otpRequired: true,
+            email: res.data?.email || credentials.email,
+          };
+        }
+
         const token = res.data?.access_token;
         if (!token) {
           throw new Error("Token missing from response");
@@ -73,6 +80,8 @@ function AuthProvider({ children }) {
         } else {
           navigate("/", { replace: true });
         }
+
+        return { otpRequired: false };
       } catch (error) {
         showToast({
           variant: "error",
@@ -81,6 +90,51 @@ function AuthProvider({ children }) {
             error.response?.data?.detail ||
             error.message ||
             "Invalid credentials or server error.",
+        });
+        throw error;
+      }
+    },
+    [navigate, showToast]
+  );
+
+  const verifyLoginOtp = useCallback(
+    async ({ email, otpCode }) => {
+      try {
+        const res = await apiClient.post("/auth/login/confirm", {
+          email,
+          otp_code: otpCode,
+        });
+
+        const token = res.data?.access_token;
+        if (!token) {
+          throw new Error("Token missing from response");
+        }
+
+        localStorage.setItem("jwt_token", token);
+        const role = getRoleFromToken(token);
+        const authUser = { token, role };
+        setUser(authUser);
+        const normalizedRole = normalizeRole(role);
+
+        if (normalizedRole === "doctor") {
+          navigate("/doctor/dashboard", { replace: true });
+        } else if (normalizedRole === "patient") {
+          navigate("/patient/dashboard", { replace: true });
+        } else if (normalizedRole === "admin") {
+          navigate("/admin/dashboard", { replace: true });
+        } else if (normalizedRole === "lab technician") {
+          navigate("/lab/dashboard", { replace: true });
+        } else {
+          navigate("/", { replace: true });
+        }
+      } catch (error) {
+        showToast({
+          variant: "error",
+          title: "OTP verification failed",
+          description:
+            error.response?.data?.detail ||
+            error.message ||
+            "Invalid OTP or server error.",
         });
         throw error;
       }
@@ -101,10 +155,11 @@ function AuthProvider({ children }) {
       token: user?.token ?? null,
       loading,
       login,
+      verifyLoginOtp,
       logout,
       isAuthenticated: Boolean(user?.token),
     }),
-    [user, loading, login, logout]
+    [user, loading, login, verifyLoginOtp, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

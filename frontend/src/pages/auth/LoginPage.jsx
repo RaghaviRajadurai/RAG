@@ -6,32 +6,53 @@ import { Button } from "../../components/ui/button.jsx";
 import { Input } from "../../components/ui/input.jsx";
 import { Spinner } from "../../components/ui/spinner.jsx";
 import { Stethoscope } from "lucide-react";
-import apiClient from "../../services/apiClient";
 
 function LoginPage() {
   usePageTitle("Login");
-  const { login } = useAuth();
+  const { login, verifyLoginOtp } = useAuth();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [otpCode, setOtpCode] = useState("");
+  const [otpStep, setOtpStep] = useState(false);
+  const [otpEmail, setOtpEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const onChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const loginUser = async (data) => {
-  const response = await apiClient.post("/login", data);
-  return response.data;
-};
-
   const onSubmit = async (e) => {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
     try {
-      await login(form);
+      const result = await login(form);
+      if (result?.otpRequired) {
+        setOtpStep(true);
+        setOtpEmail(result.email || form.email);
+      }
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const onSubmitOtp = async (e) => {
+    e.preventDefault();
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      await verifyLoginOtp({
+        email: otpEmail,
+        otpCode,
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const resetToLogin = () => {
+    setOtpStep(false);
+    setOtpCode("");
+    setOtpEmail("");
   };
 
   return (
@@ -69,57 +90,102 @@ function LoginPage() {
           <div className="pointer-events-none absolute -inset-8 rounded-3xl bg-linear-to-tr from-primary/40 via-cyan-400/10 to-transparent opacity-70 blur-3xl" />
           <div className="relative rounded-3xl border border-slate-800/80 bg-slate-950/80 p-6 shadow-2xl shadow-slate-950/80 backdrop-blur-2xl">
             <h2 className="text-lg font-semibold text-slate-50">
-              Sign in to continue
+              {otpStep ? "Verify one-time password" : "Sign in to continue"}
             </h2>
             <p className="mt-1 text-xs text-slate-400">
-              Use your clinical, patient or admin credentials.
+              {otpStep
+                ? `Enter the OTP sent to ${otpEmail}.`
+                : "Use your clinical, patient or admin credentials."}
             </p>
 
-            <form onSubmit={onSubmit} className="mt-5 space-y-4">
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="email"
-                  className="text-xs font-medium text-slate-200"
-                >
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@hospital.org"
-                  value={form.email}
-                  onChange={onChange}
-                  required
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="password"
-                  className="text-xs font-medium text-slate-200"
-                >
-                  Password
-                </label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={form.password}
-                  onChange={onChange}
-                  required
-                />
-              </div>
+            {!otpStep ? (
+              <form onSubmit={onSubmit} className="mt-5 space-y-4">
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="email"
+                    className="text-xs font-medium text-slate-200"
+                  >
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="you@hospital.org"
+                    value={form.email}
+                    onChange={onChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="password"
+                    className="text-xs font-medium text-slate-200"
+                  >
+                    Password
+                  </label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={form.password}
+                    onChange={onChange}
+                    required
+                  />
+                </div>
 
-              <Button
-                type="submit"
-                className="mt-2 flex w-full items-center justify-center gap-2"
-                disabled={submitting}
-              >
-                {submitting && <Spinner className="h-6 w-6" />}
-                <span>{submitting ? "Verifying credentials..." : "Login"}</span>
-              </Button>
-            </form>
+                <Button
+                  type="submit"
+                  className="mt-2 flex w-full items-center justify-center gap-2"
+                  disabled={submitting}
+                >
+                  {submitting && <Spinner className="h-6 w-6" />}
+                  <span>{submitting ? "Verifying credentials..." : "Login"}</span>
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={onSubmitOtp} className="mt-5 space-y-4">
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="otp_code"
+                    className="text-xs font-medium text-slate-200"
+                  >
+                    OTP Code
+                  </label>
+                  <Input
+                    id="otp_code"
+                    name="otp_code"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    placeholder="Enter 6-digit OTP"
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  className="mt-2 flex w-full items-center justify-center gap-2"
+                  disabled={submitting}
+                >
+                  {submitting && <Spinner className="h-6 w-6" />}
+                  <span>{submitting ? "Verifying OTP..." : "Verify OTP"}</span>
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full"
+                  onClick={resetToLogin}
+                  disabled={submitting}
+                >
+                  Back to Login
+                </Button>
+              </form>
+            )}
 
             <p className="mt-4 text-xs text-slate-500">
               Admin onboarding is managed centrally.{" "}
