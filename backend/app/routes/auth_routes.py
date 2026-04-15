@@ -20,10 +20,10 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 465))
 EMAIL_USER = os.environ.get("EMAIL_USER")
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_FROM = os.environ.get("EMAIL_FROM", EMAIL_USER)
-OTP_LOGIN_TARGET_EMAIL = os.environ.get("OTP_LOGIN_TARGET_EMAIL", "aswinraj868@gmail.com").strip().lower()
+OTP_LOGIN_TARGET_EMAIL = os.environ.get("OTP_LOGIN_TARGET_EMAIL", "ramanasbr76@gmail.com").strip().lower()
 OTP_LOGIN_TARGET_EMAIL_ALIASES = {
     OTP_LOGIN_TARGET_EMAIL,
-    "aswinraj868@gmail",
+    "ramanasbr76@gmail",
 }
 
 
