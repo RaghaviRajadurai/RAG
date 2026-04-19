@@ -46,6 +46,7 @@ def generate_report(result_dict: Dict) -> str:
     patients = result_dict.get('retrieved_patients', [])
     prompt = result_dict.get('prompt', '')
     note = result_dict.get('note', '')
+    answer = result_dict.get('answer', '')
     retrieved_count = result_dict.get('retrieved_count', 0)
     
     # Build report
@@ -59,6 +60,13 @@ def generate_report(result_dict: Dict) -> str:
     lines.append("-" * 50)
     lines.append(f"  {query}")
     lines.append("")
+    
+    # LLM Answer section
+    if answer:
+        lines.append("🤖 AI ANSWER")
+        lines.append("-" * 50)
+        lines.append(f"  {answer}")
+        lines.append("")
     
     # Matched patients section
     lines.append("👥 MATCHED PATIENTS (via Hybrid Retrieval)")

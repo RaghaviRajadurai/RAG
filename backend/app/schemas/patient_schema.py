@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class PatientCreate(BaseModel):
     name: str
@@ -6,3 +7,5 @@ class PatientCreate(BaseModel):
     gender: str
     diagnosis: str
     prescription: str
+    assigned_doctor_id: Optional[str] = None
+    assigned_doctor_name: Optional[str] = None

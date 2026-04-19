@@ -3,7 +3,12 @@ RAG Engine module: Core RAG logic to build LLM-ready prompts from retrieved cont
 No LLM API calls here — just prepare the prompt for later integration.
 """
 
+import os
 from typing import List, Dict
+from groq import Groq
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'app', '.env'))
 
 try:
     from .retriever import HybridRetriever
@@ -66,20 +71,36 @@ Keep the response clear and medically appropriate."""
         
         return prompt
 
-    def _build_structured_answer(self, query: str, retrieved_results: List[Dict]) -> str:
-        """Build a deterministic, human-readable summary without external LLM calls."""
+    def _build_structured_answer(self, query: str, retrieved_results: List[Dict], prompt: str) -> str:
+        """Call Groq API to generate an answer based on the prompt."""
         if not retrieved_results:
-            return "I could not find the patient details needed to answer that question."
+            return "I could not find any relevant patient records to answer that question."
 
-        top = retrieved_results[0]
-        name = top.get("name", "Unknown")
-        condition = top.get("condition", "Not specified")
-
-        return f"{name} currently has {condition}."
+        try:
+            client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+            
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a medical AI assistant specialized in healthcare data analysis. Answer based ONLY on the provided patient records context."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                model="llama-3.3-70b-versatile", # or another groq model like "llama3-8b-8192"
+                temperature=0.3,
+                max_tokens=1024,
+            )
+            return chat_completion.choices[0].message.content
+        except Exception as e:
+            return f"Error communicating with LLM API: {str(e)}"
     
     def answer(self, query: str, top_k: int = 5) -> Dict:
         """
-        Generate a RAG answer: retrieve context and build prompt.
+        Generate a RAG answer: retrieve context, build prompt, and call Groq API.
         
         Args:
             query: User's question/query
@@ -88,7 +109,9 @@ Keep the response clear and medically appropriate."""
         Returns:
             Dictionary containing:
             - query: The original query
+            - answer: The LLM generated answer
             - retrieved_patients: List of names and conditions
+            - retrieved_count: Count of retrieved docs
             - prompt_ready: Boolean flag
             - prompt: Full LLM-ready prompt
             - note: Status message
@@ -98,7 +121,7 @@ Keep the response clear and medically appropriate."""
         
         # Build LLM-ready prompt
         prompt = self._build_prompt(query, retrieved_results)
-        answer = self._build_structured_answer(query, retrieved_results)
+        answer = self._build_structured_answer(query, retrieved_results, prompt)
         
         # Extract retrieved patient info
         retrieved_patients = [
@@ -119,7 +142,7 @@ Keep the response clear and medically appropriate."""
             "retrieved_count": len(retrieved_results),
             "prompt_ready": True,
             "prompt": prompt,
-            "note": "RAG context ready. LLM API not connected yet. Plug in API key to get AI-generated answer.",
+            "note": "Answer generated successfully using Groq API.",
         }
         
         return result

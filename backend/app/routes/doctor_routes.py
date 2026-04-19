@@ -9,11 +9,18 @@ from fastapi.responses import StreamingResponse
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
-from app.database import patients_collection, records_collection
+from app.database import patients_collection, records_collection, users_collection, serialize_documents
 
 from app.auth.rbac import get_current_user, require_roles
 
 router = APIRouter()
+
+@router.get("/doctors")
+def get_doctors(current_user: dict = Depends(get_current_user)):
+    require_roles(current_user, {"admin", "receptionist", "doctor", "lab technician", "lab_technician", "lab-technician"})
+    
+    doctors = list(users_collection.find({"role": {"$regex": "^doctor$", "$options": "i"}}))
+    return serialize_documents(doctors)
 
 
 class DischargePreviewRequest(BaseModel):

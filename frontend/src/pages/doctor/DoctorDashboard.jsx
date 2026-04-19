@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DashboardLayout } from "../../layouts/DashboardLayout.jsx";
 import {
   Card,
@@ -10,14 +10,6 @@ import {
 import { Input } from "../../components/ui/input.jsx";
 import { Textarea } from "../../components/ui/textarea.jsx";
 import { Button } from "../../components/ui/button.jsx";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../components/ui/dialog.jsx";
 import { ScrollArea } from "../../components/ui/scroll-area.jsx";
 import { Spinner } from "../../components/ui/spinner.jsx";
 import { usePageTitle } from "../../hooks/usePageTitle.js";
@@ -27,68 +19,129 @@ import apiClient from "../../services/apiClient.js";
 function DoctorDashboard() {
   usePageTitle("Doctor Dashboard");
   const { showToast } = useToast();
-  const [patientSearch, setPatientSearch] = useState("");
-  const [quickQuery, setQuickQuery] = useState("");
-  const [dischargeLoading, setDischargeLoading] = useState(false);
-  const [dischargePreview, setDischargePreview] = useState(null);
+  
+  const [patients, setPatients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  
+  // Forms state
+  const [medicalForm, setMedicalForm] = useState({
+    diagnosis: "",
+    prescription: ""
+  });
+  
+  const [labForm, setLabForm] = useState({
+    report_type: "",
+    description: ""
+  });
+  
+  const [patientRecords, setPatientRecords] = useState([]);
 
-  const handleGenerateDischarge = async () => {
-    if (dischargeLoading) return;
-    setDischargeLoading(true);
+  const fetchPatients = async () => {
     try {
-      const res = await apiClient.post("/api/doctor/discharge/preview", {
-        patient_search: patientSearch || undefined,
-      });
-      setDischargePreview(res.data || null);
+      setLoading(true);
+      const res = await apiClient.get("/api/patients");
+      setPatients(res.data || []);
     } catch (error) {
       showToast({
         variant: "error",
-        title: "Unable to generate summary",
-        description:
-          error.response?.data?.detail ||
-          "Check backend /api/doctor/discharge/preview endpoint.",
+        title: "Unable to fetch patients",
+        description: error.response?.data?.detail || "Could not fetch your assigned patients.",
       });
     } finally {
-      setDischargeLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleDownloadPdf = () => {
-    if (!dischargePreview) {
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  const handleSelectPatient = async (patient) => {
+    setSelectedPatient(patient);
+    setMedicalForm({
+      diagnosis: patient.diagnosis || "",
+      prescription: patient.prescription || ""
+    });
+    setLabForm({
+      report_type: "",
+      description: ""
+    });
+    setPatientRecords([]);
+    
+    try {
+      const res = await apiClient.get(`/api/records/${patient.id}`);
+      setPatientRecords(res.data || []);
+    } catch (err) {
+      console.error("Failed to load patient lab records", err);
+    }
+  };
+
+  const handleUpdateMedical = async (e) => {
+    e.preventDefault();
+    if (!selectedPatient) return;
+    
+    try {
+      await apiClient.put(`/api/update_patient/${selectedPatient.id}`, {
+        diagnosis: medicalForm.diagnosis,
+        prescription: medicalForm.prescription
+      });
+      showToast({
+        variant: "success",
+        title: "Patient Updated",
+        description: "Diagnosis and prescription saved successfully.",
+      });
+      fetchPatients();
+    } catch (error) {
       showToast({
         variant: "error",
-        title: "No preview available",
-        description: "Generate discharge preview before downloading PDF.",
+        title: "Update failed",
+        description: error.response?.data?.detail || "Could not update patient data.",
+      });
+    }
+  };
+
+  const handleAssignLab = async (e) => {
+    e.preventDefault();
+    if (!selectedPatient) return;
+    
+    if (!labForm.report_type || !labForm.description) {
+      showToast({
+        variant: "error",
+        title: "Missing fields",
+        description: "Please specify the report type and instructions.",
       });
       return;
     }
-
-    apiClient
-      .post("/api/doctor/discharge/pdf", dischargePreview, { responseType: "blob" })
-      .then((res) => {
-        const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
-        const link = document.createElement("a");
-        link.href = blobUrl;
-        link.setAttribute("download", `discharge_summary_${(dischargePreview.patient_name || "patient").replace(/\s+/g, "_").toLowerCase()}.pdf`);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        window.URL.revokeObjectURL(blobUrl);
-      })
-      .catch((error) => {
-        showToast({
-          variant: "error",
-          title: "PDF generation failed",
-          description: error.response?.data?.detail || "Unable to generate discharge PDF.",
-        });
+    
+    try {
+      await apiClient.post("/api/add_record", {
+        patient_id: selectedPatient.id,
+        report_type: labForm.report_type,
+        description: labForm.description,
+        gender: selectedPatient.gender,
+        diagnosis: medicalForm.diagnosis || selectedPatient.diagnosis
       });
-  };
-
-  const handleSaveRecords = () => {
-    showToast({
-      title: "Saved to records",
-      description: "Persist to your EHR or RAG index here.",
-    });
+      
+      showToast({
+        variant: "success",
+        title: "Lab Request Sent",
+        description: "The lab technician has been notified.",
+      });
+      
+      setLabForm({ report_type: "", description: "" });
+      
+      // Refresh patient records to show the new pending request
+      const recordsRes = await apiClient.get(`/api/records/${selectedPatient.id}`);
+      setPatientRecords(recordsRes.data || []);
+      
+    } catch (error) {
+      showToast({
+        variant: "error",
+        title: "Request failed",
+        description: error.response?.data?.detail || "Could not send lab request.",
+      });
+    }
   };
 
   return (
@@ -96,197 +149,182 @@ function DoctorDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-slate-50">
-            Doctor workspace
+            Doctor Workspace
           </h1>
           <p className="mt-1 text-xs text-slate-400">
-            Search patients, ask AI questions and manage discharge summaries.
+            Manage your assigned patients, update diagnosis, and assign lab reports.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1.4fr)]">
-        <Card className="relative overflow-hidden">
+      <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+        {/* Left Column: Patient List */}
+        <Card className="flex flex-col h-[600px]">
           <CardHeader>
-            <CardTitle>Search patient</CardTitle>
+            <CardTitle>Assigned Patients</CardTitle>
             <CardDescription>
-              Look up a patient record by ID, name or MRN.
+              Patients waiting for your consultation.
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <Input
-              placeholder="Search by ID, MRN, name..."
-              value={patientSearch}
-              onChange={(e) => setPatientSearch(e.target.value)}
-            />
-            <div className="grid gap-3 text-xs text-slate-400 md:grid-cols-3">
-              <div>Recent: H-102938 • H-948221</div>
-              <div>Filters: inpatients, ED, discharged</div>
-              <div>Connect to your EHR search API.</div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>View reports</CardTitle>
-            <CardDescription>
-              Quick access to recent imaging, labs and discharge notes.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-40 rounded-2xl border border-slate-800/80 bg-slate-950/60 p-3">
-              <ul className="space-y-2 text-xs text-slate-300">
-                <li>
-                  <span className="font-medium text-slate-50">
-                    CT Chest – 24 Feb 2026
-                  </span>
-                  <p className="text-slate-400">
-                    Ground-glass opacities in right lower lobe, consistent with
-                    infection.
-                  </p>
-                </li>
-                <li>
-                  <span className="font-medium text-slate-50">
-                    Lab Panel – 23 Feb 2026
-                  </span>
-                  <p className="text-slate-400">
-                    CRP down from 140 to 55, WBC 9.4, lactate normalized.
-                  </p>
-                </li>
-                <li>
-                  <span className="font-medium text-slate-50">
-                    Discharge note – 20 Feb 2026
-                  </span>
-                  <p className="text-slate-400">
-                    Follow-up arranged with respiratory clinic in 4 weeks.
-                  </p>
-                </li>
-              </ul>
+          <CardContent className="flex-1 overflow-hidden">
+            <ScrollArea className="h-full pr-4">
+              {loading ? (
+                <div className="flex justify-center p-4"><Spinner /></div>
+              ) : patients.length === 0 ? (
+                <p className="text-slate-400 text-center py-8">No patients assigned to you right now.</p>
+              ) : (
+                <div className="space-y-2">
+                  {patients.map(p => (
+                    <div 
+                      key={p.id}
+                      onClick={() => handleSelectPatient(p)}
+                      className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                        selectedPatient?.id === p.id 
+                          ? "bg-primary/20 border-primary/50" 
+                          : "bg-slate-900/50 border-slate-800 hover:bg-slate-800"
+                      }`}
+                    >
+                      <div className="font-medium text-slate-200">{p.name}</div>
+                      <div className="text-xs text-slate-400 flex justify-between mt-1">
+                        <span>Age: {p.age} • {p.gender}</span>
+                      </div>
+                      <div className="text-xs text-slate-500 mt-1 truncate">
+                        Reason: {p.diagnosis || "Not specified"}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </ScrollArea>
           </CardContent>
         </Card>
-      </div>
 
-      <div className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)]">
-        <Card>
-          <CardHeader>
-            <CardTitle>Ask AI about this patient</CardTitle>
-            <CardDescription>
-              Short, focused questions. For longer prompts use the dedicated AI
-              Query page.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Textarea
-              placeholder="e.g. Summarise the last 48 hours of clinical trajectory..."
-              value={quickQuery}
-              onChange={(e) => setQuickQuery(e.target.value)}
-            />
-            <div className="flex justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() =>
-                  showToast({
-                    title: "Use AI Query page",
-                    description:
-                      "This shortcut is a stub. Use the Doctor AI Query screen for full RAG flow.",
-                  })
-                }
-              >
-                Open AI Query console
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Right Column: Patient Details & Actions */}
+        <ScrollArea className="h-[600px] pr-4 rounded-xl">
+          <div className="space-y-4 flex flex-col">
+            {!selectedPatient ? (
+              <Card className="flex-1 flex items-center justify-center bg-slate-900/30 border-dashed min-h-[300px]">
+                <p className="text-slate-500">Select a patient from the list to view and manage details.</p>
+              </Card>
+            ) : (
+            <>
+              {/* Medical Details Card */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Consultation: {selectedPatient.name}</CardTitle>
+                  <CardDescription>
+                    Update clinical diagnosis and prescribe medication.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleUpdateMedical} className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-300">Diagnosis / Disease Found</label>
+                      <Textarea 
+                        placeholder="Enter the detailed diagnosis..."
+                        value={medicalForm.diagnosis}
+                        onChange={(e) => setMedicalForm({...medicalForm, diagnosis: e.target.value})}
+                        className="h-20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-300">Prescription & Advice</label>
+                      <Textarea 
+                        placeholder="Enter medicines, dosage, and advice..."
+                        value={medicalForm.prescription}
+                        onChange={(e) => setMedicalForm({...medicalForm, prescription: e.target.value})}
+                        className="h-24"
+                      />
+                    </div>
+                    <Button type="submit" className="w-full">Save Medical Record</Button>
+                  </form>
+                </CardContent>
+              </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Discharge summary</CardTitle>
-            <CardDescription>
-              Generate an AI-assisted discharge summary draft.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="w-full" onClick={handleGenerateDischarge}>
-                  {dischargeLoading ? (
-                    <span className="inline-flex items-center gap-2">
-                      <Spinner className="h-5 w-5" />
-                      Generating preview...
-                    </span>
-                  ) : (
-                    "Generate discharge summary"
-                  )}
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Discharge summary preview</DialogTitle>
-                  <DialogDescription>
-                    Review the AI-assisted summary before finalizing. Always
-                    verify clinically.
-                  </DialogDescription>
-                </DialogHeader>
-                <ScrollArea className="mt-3 h-64 rounded-2xl border border-slate-800/80 bg-slate-950/60 p-4">
-                  {!dischargePreview ? (
-                    <div className="flex h-full items-center justify-center text-xs text-slate-400">
-                      {dischargeLoading ? (
-                        <Spinner />
-                      ) : (
-                        "No preview yet. Trigger generation from the dashboard."
-                      )}
+              {/* Lab Request Card */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Assign Lab Test</CardTitle>
+                  <CardDescription>
+                    Send a request to the lab technician for this patient.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleAssignLab} className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-300">Test Type</label>
+                      <select 
+                        value={labForm.report_type}
+                        onChange={(e) => setLabForm({...labForm, report_type: e.target.value})}
+                        className="flex h-9 w-full rounded-md border border-slate-800 bg-slate-950 px-3 py-1 text-sm text-slate-50 shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                      >
+                        <option value="">-- Select Test --</option>
+                        <option value="Blood Test">Blood Test</option>
+                        <option value="Urine Test">Urine Test</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="MRI">MRI</option>
+                        <option value="CT Scan">CT Scan</option>
+                      </select>
                     </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-slate-300">Instructions / Description</label>
+                      <Textarea 
+                        placeholder="Specific instructions for the lab technician..."
+                        value={labForm.description}
+                        onChange={(e) => setLabForm({...labForm, description: e.target.value})}
+                        className="h-16"
+                      />
+                    </div>
+                    <Button type="submit" variant="secondary" className="w-full">Send Request to Lab</Button>
+                  </form>
+                </CardContent>
+              </Card>
+
+              {/* Existing Lab Reports Card */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Patient Lab Records</CardTitle>
+                  <CardDescription>
+                    History of lab reports for {selectedPatient.name}.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {patientRecords.length === 0 ? (
+                    <p className="text-xs text-slate-400">No lab records found for this patient.</p>
                   ) : (
-                    <div className="space-y-4 text-sm text-slate-200">
-                      <section>
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                          Diagnosis
-                        </h3>
-                        <p className="mt-1">{dischargePreview.diagnosis}</p>
-                      </section>
-                      <section>
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                          Treatment
-                        </h3>
-                        <p className="mt-1">{dischargePreview.treatment}</p>
-                      </section>
-                      <section>
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                          Lab results
-                        </h3>
-                        <p className="mt-1">{dischargePreview.labs}</p>
-                      </section>
-                      <section>
-                        <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-400">
-                          Follow-up instructions
-                        </h3>
-                        <p className="mt-1">{dischargePreview.followUp}</p>
-                      </section>
+                    <div className="space-y-3">
+                      {patientRecords.map((record, idx) => (
+                        <div key={idx} className="p-3 border border-slate-800 rounded-md bg-slate-950/50">
+                          <div className="flex justify-between items-start mb-2">
+                            <span className="font-semibold text-sm text-slate-200">{record.report_type}</span>
+                            <span className={`text-[10px] px-2 py-0.5 rounded-full uppercase ${
+                              record.status === "verified" ? "bg-green-500/20 text-green-300" :
+                              record.status === "in_review" ? "bg-yellow-500/20 text-yellow-300" :
+                              "bg-slate-500/20 text-slate-300"
+                            }`}>
+                              {record.status}
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-400 mb-1"><span className="font-medium text-slate-300">Instructions:</span> {record.description}</p>
+                          {record.lab_report && (
+                            <div className="mt-2 p-2 bg-slate-900 rounded text-xs text-slate-300 border border-slate-800">
+                              <span className="font-medium block mb-1 text-slate-200">Results:</span>
+                              {record.lab_report}
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   )}
-                </ScrollArea>
-                <div className="mt-4 flex items-center justify-between gap-3">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={handleDownloadPdf}
-                  >
-                    Download as PDF
-                  </Button>
-                  <Button type="button" onClick={handleSaveRecords}>
-                    Save to records
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
+            </>
+          )}
+          </div>
+        </ScrollArea>
       </div>
     </DashboardLayout>
   );
 }
 
 export { DoctorDashboard };
-

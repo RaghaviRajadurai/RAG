@@ -54,11 +54,67 @@ class QueryResponse(BaseModel):
     report_path: str = None
     error: str = None
 
+import os
+from groq import Groq
+from app.database import patients_collection, records_collection, parse_object_id
+
 @router.post("/query", response_model=QueryResponse)
 async def query_rag(request: QueryRequest, current_user: dict = Depends(get_current_user)):
-    require_roles(current_user, {"doctor", "admin"})
+    require_roles(current_user, {"doctor", "admin", "patient"})
+    
+    role = (current_user.get("role") or "").strip().lower()
 
-    # Import RAG modules here to avoid module-level import issues
+    if role == "patient":
+        # For patients, just pull their own records from MongoDB and use Groq directly
+        try:
+            # 1. Fetch patient profile
+            patient_profile = patients_collection.find_one({"owner_user_id": str(current_user["_id"])})
+            if not patient_profile and current_user.get("patient_profile_id"):
+                try:
+                    patient_profile = patients_collection.find_one({"_id": parse_object_id(current_user.get("patient_profile_id"))})
+                except Exception:
+                    pass
+                
+            context_text = "No patient profile found."
+            if patient_profile:
+                # 2. Fetch lab records
+                records = list(records_collection.find({"patient_id": str(patient_profile["_id"])}))
+                
+                context_text = f"Patient Name: {patient_profile.get('name', 'Unknown')}\n"
+                context_text += f"Age: {patient_profile.get('age', 'Unknown')}, Gender: {patient_profile.get('gender', 'Unknown')}\n"
+                context_text += f"Diagnosis: {patient_profile.get('diagnosis', 'Unknown')}\n"
+                context_text += f"Prescription: {patient_profile.get('prescription', 'Unknown')}\n\n"
+                context_text += "--- Lab Records ---\n"
+                for r in records:
+                    context_text += f"- Test: {r.get('report_type', 'N/A')} (Status: {r.get('status', 'pending')})\n"
+                    context_text += f"  Instructions: {r.get('description', 'N/A')}\n"
+                    if r.get('lab_report'):
+                        context_text += f"  Results: {r.get('lab_report')}\n"
+                    
+            # 3. Call Groq
+            client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+            prompt = f"--- CONTEXT ---\n{context_text}\n\n--- QUESTION ---\n{request.query}\n\nAnswer based on context."
+            
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": "You are a helpful medical assistant for the patient."},
+                    {"role": "user", "content": prompt}
+                ],
+                model="llama-3.3-70b-versatile",
+                temperature=0.3,
+                max_tokens=1024,
+            )
+            answer = chat_completion.choices[0].message.content
+            
+            return QueryResponse(
+                query=request.query,
+                result={"answer": answer, "retrieved_patients": []},
+                report_saved=False
+            )
+        except Exception as e:
+            return QueryResponse(query=request.query, error=f"Failed to generate answer: {str(e)}")
+
+    # Import RAG modules here to avoid module-level import issues for doctors/admins
     try:
         engine_cls = RAGEngine
         generate_report_fn = generate_report
@@ -196,3 +252,4 @@ async def export_db_to_json(current_user: dict = Depends(get_current_user)):
             "message": "Export failed",
             "error": str(e)
         }
+# trigger reload

@@ -16,6 +16,7 @@ import { LabTechnicianDashboard } from "../pages/lab/LabTechnicianDashboard.jsx"
 import { LabReportCreatePage } from "../pages/lab/LabReportCreatePage.jsx";
 import { LabReportUpdatePage } from "../pages/lab/LabReportUpdatePage.jsx";
 import { LabReportVerifyPage } from "../pages/lab/LabReportVerifyPage.jsx";
+import { ReceptionistDashboard } from "../pages/receptionist/ReceptionistDashboard.jsx";
 
 function AppRoutes() {
   return (
@@ -46,6 +47,10 @@ function AppRoutes() {
           <Route path="/lab/reports/create" element={<LabReportCreatePage />} />
           <Route path="/lab/reports/update" element={<LabReportUpdatePage />} />
           <Route path="/lab/reports/verify" element={<LabReportVerifyPage />} />
+        </Route>
+
+        <Route element={<RoleBasedRoute allowedRoles={["Receptionist", "receptionist"]} />}>
+          <Route path="/receptionist/dashboard" element={<ReceptionistDashboard />} />
         </Route>
       </Route>
 

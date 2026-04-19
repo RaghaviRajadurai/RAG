@@ -77,6 +77,8 @@ function AuthProvider({ children }) {
           navigate("/admin/dashboard", { replace: true });
         } else if (normalizedRole === "lab technician") {
           navigate("/lab/dashboard", { replace: true });
+        } else if (normalizedRole === "receptionist") {
+          navigate("/receptionist/dashboard", { replace: true });
         } else {
           navigate("/", { replace: true });
         }
@@ -124,6 +126,8 @@ function AuthProvider({ children }) {
           navigate("/admin/dashboard", { replace: true });
         } else if (normalizedRole === "lab technician") {
           navigate("/lab/dashboard", { replace: true });
+        } else if (normalizedRole === "receptionist") {
+          navigate("/receptionist/dashboard", { replace: true });
         } else {
           navigate("/", { replace: true });
         }
@@ -142,10 +146,23 @@ function AuthProvider({ children }) {
     [navigate, showToast]
   );
 
-  const logout = useCallback(() => {
-    localStorage.removeItem("jwt_token");
-    setUser(null);
-    navigate("/login", { replace: true });
+  const logout = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("jwt_token");
+      if (token) {
+        await apiClient.post(
+          "/auth/logout",
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+    } catch (e) {
+      console.error("Logout log failed:", e);
+    } finally {
+      localStorage.removeItem("jwt_token");
+      setUser(null);
+      navigate("/login", { replace: true });
+    }
   }, [navigate]);
 
   const value = useMemo(

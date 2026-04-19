@@ -1,0 +1,58 @@
+
+╔══════════════════════════════════════════════════╗
+║              HEALTHCARE RAG REPORT               ║
+╚══════════════════════════════════════════════════╝
+
+📋 QUERY
+--------------------------------------------------
+  test
+
+🤖 AI ANSWER
+--------------------------------------------------
+  Information not available in current patient records.
+
+👥 MATCHED PATIENTS (via Hybrid Retrieval)
+--------------------------------------------------
+  • Ananya Sharma: string (relevance: 10.2%)
+  • Suresh Patel: Coronary Artery Disease (relevance: 7.3%)
+  • Suresh Patel: Coronary Artery Disease (relevance: 7.3%)
+  • Priya Nair: Asthma (relevance: 6.4%)
+  • Rahul Verma: Gastritis (relevance: 6.3%)
+  Total matched: 5
+
+⚙️  SYSTEM STATUS
+--------------------------------------------------
+  Answer generated successfully using Groq API.
+
+📂 RETRIEVED CONTEXT (Top Results for LLM)
+--------------------------------------------------
+--- SYSTEM ---
+You are a medical AI assistant specialized in healthcare data analysis. 
+Your role is to answer questions ONLY based on the provided patient records context. 
+Do not hallucinate or infer information not present in the records. 
+Be accurate, concise, and professional in your responses.
+If the answer is not found in the provided context, clearly state: 
+"Information not available in current patient records."
+
+--- CONTEXT (Retrieved Patient Records) ---
+1. Patient: Ananya Sharma, Age: 0, Gender: Female. Hospital: Backend Database, Doctor: Dr. Sharma, Report Date: 2026-04-05. Diagnosis: string - Medical record from backend database. Prescription: string. Lab Report: treatment: Lifestyle changes and medication; lab_results: Blood pressure 150/95. Remarks: See medical records for detailed lab information.
+
+2. Patient: Suresh Patel, Age: 55, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Coronary Artery Disease - Medical record from backend database. Prescription: Aspirin 75mg daily. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+3. Patient: Suresh Patel, Age: 55, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Coronary Artery Disease - Medical record from backend database. Prescription: Aspirin 75mg daily. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+4. Patient: Priya Nair, Age: 28, Gender: Female. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Asthma - Medical record from backend database. Prescription: Salbutamol inhaler. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+5. Patient: Rahul Verma, Age: 35, Gender: Male. Hospital: Backend Database, Doctor: Various, Report Date: 2026-04-05. Diagnosis: Gastritis - Medical record from backend database. Prescription: Omeprazole 20mg. Lab Report: N/A. Remarks: See medical records for detailed lab information.
+
+--- QUESTION ---
+test
+
+--- INSTRUCTION ---
+Based ONLY on the context provided above, answer the user's question. 
+Be specific and cite patient names/IDs when relevant. 
+Keep the response clear and medically appropriate.
+
+==================================================
+Report generated: 2026-04-18 12:28:28
+==================================================

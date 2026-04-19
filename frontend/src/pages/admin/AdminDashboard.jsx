@@ -97,25 +97,25 @@ function AdminDashboard() {
                         {formatTimestamp(log.timestamp)}
                       </td>
                       <td className="px-4 py-2">
-                        {log.actor_username || log.actor_user_id || "Unknown"}
+                        {log.actor_username || log.username || log.actor_user_id || "Unknown"}
                       </td>
                       <td className="px-4 py-2">
                         <span
                           className={`inline-flex items-center rounded-full px-2 py-1 text-[10px] font-medium uppercase ${
-                            log.actor_role?.toLowerCase() === "admin"
+                            (log.actor_role || log.role)?.toLowerCase() === "admin"
                               ? "bg-red-500/20 text-red-200"
-                              : log.actor_role?.toLowerCase() === "doctor"
+                              : (log.actor_role || log.role)?.toLowerCase() === "doctor"
                               ? "bg-blue-500/20 text-blue-200"
                               : "bg-slate-500/20 text-slate-200"
                           }`}
                         >
-                          {log.actor_role || "Unknown"}
+                          {log.actor_role || log.role || "Unknown"}
                         </span>
                       </td>
                       <td className="px-4 py-2 font-mono text-slate-400">
                         {log.action || "Unknown"}
                       </td>
-                      <td className="px-4 py-2">{log.resource || "N/A"}</td>
+                      <td className="px-4 py-2">{log.resource || "Authentication"}</td>
                       <td className="px-4 py-2">
                         <span
                           className={`inline-flex items-center rounded-full px-2 py-1 text-[10px] font-medium uppercase ${
@@ -124,7 +124,7 @@ function AdminDashboard() {
                               : "bg-green-500/20 text-green-200"
                           }`}
                         >
-                          {log.status || "Unknown"}
+                          {log.status || "Success"}
                         </span>
                       </td>
                     </tr>
@@ -143,11 +143,16 @@ function AdminDashboard() {
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => {
+              onClick={async () => {
                 setLoading(true);
-                setTimeout(() => {
+                try {
+                  const res = await apiClient.get("/api/admin/audit-logs?limit=100");
+                  setAuditLogs(res.data || []);
+                } catch (err) {
+                  console.error(err);
+                } finally {
                   setLoading(false);
-                }, 500);
+                }
               }}
             >
               Refresh

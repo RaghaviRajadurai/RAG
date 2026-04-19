@@ -2,8 +2,8 @@ import os
 import smtplib
 import secrets
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException
-from app.database import users_collection, otp_verifications_collection
+from fastapi import APIRouter, HTTPException, Depends
+from app.database import users_collection, otp_verifications_collection, audit_logs_collection
 from app.schemas.otp_schema import (
     OTPRegisterRequest,
     OTPConfirmRequest,
@@ -12,6 +12,7 @@ from app.schemas.otp_schema import (
 )
 from app.auth.jwt_handler import create_token
 from app.auth.auth_handler import hash_password, verify_password
+from app.auth.rbac import get_current_user
 
 router = APIRouter()
 
@@ -209,7 +210,27 @@ def login(login_data: LoginRequest):
         }
 
     token = create_token(str(user["_id"]), user.get("role", "Patient"))
+    
+    audit_logs_collection.insert_one({
+        "action": "login",
+        "user_id": str(user["_id"]),
+        "username": user.get("username"),
+        "role": user.get("role", "Patient"),
+        "timestamp": datetime.utcnow()
+    })
+    
     return {"access_token": token}
+
+@router.post("/logout")
+def logout(current_user: dict = Depends(get_current_user)):
+    audit_logs_collection.insert_one({
+        "action": "logout",
+        "user_id": str(current_user["_id"]),
+        "username": current_user.get("username"),
+        "role": current_user.get("role", "Patient"),
+        "timestamp": datetime.utcnow()
+    })
+    return {"message": "Logged out successfully"}
 
 
 @router.post("/login/confirm")
@@ -240,4 +261,13 @@ def confirm_login_otp(data: LoginOTPConfirmRequest):
     )
 
     token = create_token(str(user["_id"]), user.get("role", "Patient"))
+    
+    audit_logs_collection.insert_one({
+        "action": "login",
+        "user_id": str(user["_id"]),
+        "username": user.get("username"),
+        "role": user.get("role", "Patient"),
+        "timestamp": datetime.utcnow()
+    })
+    
     return {"access_token": token}

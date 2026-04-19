@@ -90,6 +90,14 @@ function DashboardLayout({ variant, children }) {
             label: "My Overview",
           },
         ]
+      : variant === "receptionist"
+      ? [
+          {
+            to: "/receptionist/dashboard",
+            icon: Users,
+            label: "Patient Management",
+          },
+        ]
       : variant === "lab"
       ? [
           {

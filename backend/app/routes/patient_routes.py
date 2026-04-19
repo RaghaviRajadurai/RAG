@@ -16,7 +16,7 @@ router = APIRouter()
 @router.post("/add_patient")
 def add_patient(patient: PatientCreate, current_user: dict = Depends(get_current_user)):
     role = (current_user.get("role") or "").strip().lower()
-    if role not in {"doctor", "admin", "patient"}:
+    if role not in {"doctor", "admin", "patient", "receptionist"}:
         raise HTTPException(status_code=403, detail="Insufficient permissions")
 
     payload = patient.dict()
@@ -38,8 +38,15 @@ def add_patient(patient: PatientCreate, current_user: dict = Depends(get_current
 @router.get("/patients")
 def get_patients(current_user: dict = Depends(get_current_user)):
     role = (current_user.get("role") or "").strip().lower()
-    if role in {"doctor", "admin"}:
+    
+    # Receptionist can see all patients, but Doctor should only see their assigned patients
+    if role in {"admin", "receptionist", "lab technician", "lab_technician", "lab-technician"}:
         return serialize_documents(list(patients_collection.find()))
+        
+    if role == "doctor":
+        # Doctors see all patients for now, but we can filter by assigned_doctor_id later if needed
+        # We will filter by assigned_doctor_id to implement the proper workflow
+        return serialize_documents(list(patients_collection.find({"assigned_doctor_id": str(current_user["_id"])})))
 
     if role == "patient":
         own_id = get_user_patient_profile_id(current_user)
@@ -58,12 +65,14 @@ def get_patient_by_id(patient_id: str, current_user: dict = Depends(get_current_
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    ensure_patient_can_access_target(
-        current_user,
-        target_patient_id=patient_id,
-        action="read_patient",
-        resource="patients",
-    )
+    role = (current_user.get("role") or "").strip().lower()
+    if role not in {"doctor", "admin", "receptionist"}:
+        ensure_patient_can_access_target(
+            current_user,
+            target_patient_id=patient_id,
+            action="read_patient",
+            resource="patients",
+        )
 
     patient = patients_collection.find_one({"_id": oid})
     if not patient:
@@ -71,6 +80,31 @@ def get_patient_by_id(patient_id: str, current_user: dict = Depends(get_current_
 
     return serialize_document(patient)
 
+
+@router.put("/update_patient/{patient_id}")
+def update_patient(patient_id: str, update_data: dict, current_user: dict = Depends(get_current_user)):
+    role = (current_user.get("role") or "").strip().lower()
+    if role not in {"doctor", "admin", "receptionist"}:
+        raise HTTPException(status_code=403, detail="Insufficient permissions")
+
+    try:
+        oid = parse_object_id(patient_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    # Filter allowed fields to update
+    allowed_fields = {"diagnosis", "prescription", "assigned_doctor_id", "assigned_doctor_name"}
+    payload = {k: v for k, v in update_data.items() if k in allowed_fields}
+
+    if not payload:
+        return {"message": "No valid fields to update"}
+
+    result = patients_collection.update_one({"_id": oid}, {"$set": payload})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Patient not found")
+
+    updated = patients_collection.find_one({"_id": oid})
+    return serialize_document(updated)
 
 @router.delete("/delete_patient/{patient_id}")
 def delete_patient(patient_id: str, current_user: dict = Depends(get_current_user)):
@@ -80,7 +114,7 @@ def delete_patient(patient_id: str, current_user: dict = Depends(get_current_use
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
-    if role in {"doctor", "admin"}:
+    if role in {"doctor", "admin", "receptionist"}:
         pass
     elif role == "patient":
         ensure_patient_can_access_target(
